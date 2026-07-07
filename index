@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Plant Monitoring Form</title>
+<style>
+
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0b0f1a; --surface: #131929; --surface2: #1a2338; --surface3: #1f2d47;
+    --border: rgba(99,180,255,0.15); --accent: #3b82f6; --accent2: #06b6d4;
+    --text: #e8edf5; --muted: #7a8aaa;
+    --success: #10b981; --warn: #f59e0b; --danger: #ef4444;
+    --radius: 12px; --input-h: 48px;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text);
+    min-height: 100vh; padding: 0 0 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg,#0f172a,#1a3358);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.1rem; display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 30;
+  }
+  .header-icon { width:38px;height:38px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .header-icon svg { width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.2; }
+  .header-text h1 { font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.05em;color:#fff; }
+  .header-text p { font-size:.72rem;color:var(--muted);margin-top:1px; }
+
+  .live-bar {
+    background:var(--surface2); border-bottom:1px solid var(--border);
+    padding:.42rem 1.1rem; display:flex; align-items:center; gap:7px;
+    font-size:.7rem; color:var(--muted); position:sticky; top:69px; z-index:29;
+  }
+  .dot { width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 2s infinite;flex-shrink:0; }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* ── TAB NAV ── */
+  .tab-nav-wrap {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 98px; z-index: 28; overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tab-nav-wrap::-webkit-scrollbar { display: none; }
+  .tab-nav {
+    display: flex; min-width: max-content; padding: 0 .6rem;
+  }
+  .tab-btn {
+    padding: .72rem .9rem; border: none; background: none;
+    font-family: 'Rajdhani', sans-serif; font-size: .78rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+    cursor: pointer; border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s; white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn svg { width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;flex-shrink:0; }
+  .tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+  .tab-btn.disabled { opacity: .35; cursor: not-allowed; }
+  .tab-badge {
+    font-size:.55rem; background: rgba(99,180,255,.15); color: var(--muted);
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px;
+    letter-spacing: .06em;
+  }
+  .tab-btn.active .tab-badge { background: rgba(6,182,212,.15); color: var(--accent2); border-color: rgba(6,182,212,.3); }
+
+  /* ── TAB PANELS ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 600px; margin: 0 auto; padding: 1rem .9rem; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1rem; margin-bottom: .9rem;
+  }
+  .card-title {
+    font-family:'Rajdhani',sans-serif; font-size:.72rem; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--accent2);
+    margin-bottom:.85rem; display:flex; align-items:center; gap:8px;
+  }
+  .card-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* ── FIELDS ── */
+  .field { display:flex; flex-direction:column; gap:5px; margin-bottom:.75rem; }
+  .field:last-child { margin-bottom:0; }
+  .field label { font-size:.72rem; color:var(--muted); font-weight:500; letter-spacing:.02em; }
+  input[type="text"], select, textarea {
+    width:100%; height:var(--input-h); background:var(--surface2);
+    border:1px solid var(--border); border-radius:9px;
+    padding:0 .9rem; color:var(--text);
+    font-family:'DM Sans',sans-serif; font-size:.95rem;
+    outline:none; transition:border-color .2s; -webkit-appearance:none;
+  }
+  input[type="text"]:focus, select:focus, textarea:focus {
+    border-color:var(--accent); box-shadow:0 0 0 3px rgba(59,130,246,.15);
+  }
+  input::placeholder, textarea::placeholder { color:#3d4f6e; }
+  select option { background:#1a2338; }
+  textarea { height:auto; min-height:80px; padding:.8rem .9rem; resize:none; line-height:1.55; font-size:.9rem; }
+  .row-2 { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
+  .timestamp-pill {
+    height:var(--input-h); background:var(--surface2); border:1px solid var(--border);
+    border-radius:9px; padding:0 .9rem;
+    font-family:'Rajdhani',sans-serif; font-size:.78rem; color:var(--muted);
+    letter-spacing:.06em; display:flex; align-items:center; gap:7px;
+  }
+  .ts-dot { width:5px;height:5px;border-radius:50%;background:var(--success);animation:pulse 2s infinite;flex-shrink:0; }
+  .required { color:var(--accent); }
+
+  /* ── LINE MONITORING: DEVICE CARDS ── */
+  .device-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); margin-bottom: .8rem; overflow: hidden;
+  }
+  .device-card-header {
+    background: var(--surface2); border-bottom: 1px solid var(--border);
+    padding: .65rem 1rem; display:flex; align-items:center; justify-content:space-between;
+  }
+  .device-num {
+    font-family:'Rajdhani',sans-serif; font-size:.8rem; font-weight:700;
+    letter-spacing:.1em; color:var(--accent2); text-transform:uppercase;
+  }
+  .del-btn {
+    width:30px; height:30px; border-radius:7px;
+    border:1px solid rgba(239,68,68,.3); background:rgba(239,68,68,.08);
+    color:var(--danger); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .15s;
+  }
+  .del-btn:hover { background:rgba(239,68,68,.2); }
+  .del-btn svg { width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5; }
+  .del-btn:disabled { opacity:.2; cursor:not-allowed; }
+  .device-card-body { padding:1rem; display:flex; flex-direction:column; gap:.7rem; }
+  .reading-group { background:var(--surface2); border:1px solid rgba(99,180,255,.1); border-radius:10px; padding:.75rem .8rem; }
+  .reading-group-title {
+    font-family:'Rajdhani',sans-serif; font-size:.65rem; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+    margin-bottom:.6rem; text-align:center;
+  }
+  .readings-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.5rem; }
+  .reading-cell { display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .rc-label { font-family:'Rajdhani',sans-serif; font-size:.62rem; font-weight:600; letter-spacing:.1em; color:var(--muted); text-transform:uppercase; text-align:center; }
+  .rc-unit { font-size:.56rem; color:#3d4f6e; text-align:center; margin-top:2px; }
+  .reading-cell input { font-size:1.1rem; }
+  input[type="number"] {
+    -moz-appearance:textfield;
+    width:100%; height:var(--input-h); background:var(--surface2);
+    border:1px solid var(--border); border-radius:9px;
+    padding:0 .5rem; color:var(--text);
+    font-family:'Rajdhani',sans-serif; font-size:1.15rem; font-weight:700;
+    text-align:center; outline:none; transition:border-color .2s;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+  input[type="number"]:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+  input[type="number"]::placeholder { color:#3d4f6e; font-size:.8rem; font-weight:400; }
+  .status-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.5rem; }
+  .status-btn {
+    padding:.72rem .5rem; border:1px solid var(--border); border-radius:9px;
+    background:var(--surface2); color:var(--muted);
+    font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500;
+    cursor:pointer; text-align:center; transition:all .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .status-btn.ok   { border-color:var(--success); background:rgba(16,185,129,.13); color:var(--success); }
+  .status-btn.wrn  { border-color:var(--warn);    background:rgba(245,158,11,.13);  color:var(--warn);   }
+  .status-btn.crit { border-color:var(--danger);  background:rgba(239,68,68,.13);   color:var(--danger); }
+  .add-device-btn {
+    width:100%; padding:.85rem; margin-bottom:.9rem;
+    background:rgba(59,130,246,.1); border:1.5px dashed rgba(59,130,246,.4);
+    color:var(--accent); border-radius:var(--radius);
+    font-family:'DM Sans',sans-serif; font-size:.9rem; font-weight:500;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:all .18s; -webkit-tap-highlight-color:transparent;
+  }
+  .add-device-btn:hover, .add-device-btn:active { background:rgba(59,130,246,.18); }
+  .add-device-btn svg { width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5; }
+
+  /* ── VIBRATION TABLE ── */
+  .vib-table-wrap {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    border-radius: 10px; border: 1px solid var(--border);
+    margin-bottom: .9rem;
+  }
+  .vib-table {
+    width: 100%; border-collapse: collapse; min-width: 420px;
+  }
+  .vib-table thead tr {
+    background: var(--surface2);
+  }
+  .vib-table th {
+    font-family: 'Rajdhani', sans-serif; font-size: .68rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--accent2);
+    padding: .6rem .55rem; text-align: center;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .vib-table th:last-child { border-right: none; }
+  .vib-table th.col-point { text-align: left; min-width: 52px; }
+  .vib-table th.col-location { text-align: left; min-width: 130px; }
+  .vib-table tbody tr { border-bottom: 1px solid rgba(99,180,255,.07); }
+  .vib-table tbody tr:last-child { border-bottom: none; }
+  .vib-table tbody tr:nth-child(odd) { background: rgba(26,35,56,.6); }
+  .vib-table tbody tr:nth-child(even) { background: rgba(19,25,41,.6); }
+  .vib-table td {
+    padding: .4rem .45rem; border-right: 1px solid rgba(99,180,255,.07);
+    vertical-align: middle;
+  }
+  .vib-table td:last-child { border-right: none; }
+  .vib-point {
+    font-family: 'Rajdhani', sans-serif; font-size: .82rem; font-weight: 700;
+    color: var(--accent2); letter-spacing: .06em; text-align: center;
+    white-space: nowrap;
+  }
+  .vib-location {
+    font-size: .78rem; color: var(--text); line-height: 1.3; padding-left: .2rem;
+  }
+  .vib-location .sub { font-size: .65rem; color: var(--muted); display: block; margin-top: 1px; }
+  .vib-input-wrap { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .vib-input-wrap input[type="number"] {
+    height: 38px; font-size: .95rem; border-radius: 7px;
+    min-width: 64px; padding: 0 .3rem;
+  }
+  .vib-unit { font-size: .52rem; color: #3d4f6e; letter-spacing: .04em; }
+
+
+  /* ── FUEL TABLE ── */
+  .fuel-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:10px; border:1px solid var(--border); margin-bottom:.75rem; }
+  .fuel-table { width:100%; border-collapse:collapse; min-width:380px; }
+  .fuel-table thead tr { background:var(--surface2); }
+  .fuel-table th { font-family:'Rajdhani',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--accent2); padding:.65rem .6rem; text-align:center; border-bottom:1px solid var(--border); border-right:1px solid var(--border); white-space:nowrap; }
+  .fuel-table th:first-child { text-align:left; min-width:90px; }
+  .fuel-table th:last-child { border-right:none; }
+  .fuel-table tbody tr { border-bottom:1px solid rgba(99,180,255,.07); }
+  .fuel-table tbody tr:last-child { border-bottom:none; }
+  .fuel-table tbody tr:nth-child(odd) { background:rgba(26,35,56,.6); }
+  .fuel-table tbody tr:nth-child(even) { background:rgba(19,25,41,.6); }
+  .fuel-table td { padding:.45rem .5rem; border-right:1px solid rgba(99,180,255,.07); vertical-align:middle; }
+  .fuel-table td:last-child { border-right:none; }
+  .fuel-tank-label { font-family:'Rajdhani',sans-serif; font-size:.84rem; font-weight:700; color:var(--text); letter-spacing:.04em; padding-left:.2rem; white-space:nowrap; }
+  .fuel-input-wrap { display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .fuel-input-wrap input[type="number"] { height:36px; font-size:.92rem; border-radius:7px; min-width:70px; padding:0 .3rem; }
+  .fuel-unit { font-size:.5rem; color:#3d4f6e; letter-spacing:.04em; }
+  #fuel-main-prev, #fuel-day-prev { pointer-events:none !important; -webkit-user-select:none !important; user-select:none !important; }
+  .fuel-liters-display { font-size:.6rem; color:var(--accent2); text-align:center; margin-top:2px; letter-spacing:.02em; }
+  .fuel-total { font-family:'Rajdhani',sans-serif; font-size:1rem; font-weight:700; color:var(--accent2); text-align:center; letter-spacing:.04em; min-width:70px; }
+  .fuel-total-unit { font-size:.55rem; color:var(--muted); display:block; margin-top:1px; }
+  .fuel-delivery-btn { width:100%; padding:.85rem; margin-bottom:.9rem; background:rgba(245,158,11,.1); border:1.5px dashed rgba(245,158,11,.45); color:var(--warn); border-radius:var(--radius); font-family:'DM Sans',sans-serif; font-size:.9rem; font-weight:500; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all .18s; -webkit-tap-highlight-color:transparent; }
+  .fuel-delivery-btn:hover, .fuel-delivery-btn:active { background:rgba(245,158,11,.18); }
+  .fuel-delivery-btn svg { width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5; }
+  .fuel-delivery-section { display:none; background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.25); border-radius:var(--radius); padding:1rem; margin-bottom:.9rem; }
+  .fuel-delivery-section.show { display:block; }
+  .fuel-delivery-section .card-title { color:var(--warn); }
+  .fuel-delivery-section .card-title::after { background:rgba(245,158,11,.2); }
+
+
+  /* ── CHEMICAL TABLE ── */
+  .chem-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:10px; border:1px solid var(--border); margin-bottom:.75rem; }
+  .chem-table { width:100%; border-collapse:collapse; min-width:360px; }
+  .chem-table thead tr { background:var(--surface2); }
+  .chem-table th { font-family:'Rajdhani',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--accent2); padding:.65rem .6rem; text-align:center; border-bottom:1px solid var(--border); border-right:1px solid var(--border); white-space:nowrap; }
+  .chem-table th.col-chem { text-align:left; min-width:130px; }
+  .chem-table th:last-child { border-right:none; }
+  .chem-table tbody tr { border-bottom:1px solid rgba(99,180,255,.07); }
+  .chem-table tbody tr:last-child { border-bottom:none; }
+  .chem-table tbody tr:nth-child(odd) { background:rgba(26,35,56,.6); }
+  .chem-table tbody tr:nth-child(even) { background:rgba(19,25,41,.6); }
+  .chem-table td { padding:.45rem .5rem; border-right:1px solid rgba(99,180,255,.07); vertical-align:middle; }
+  .chem-table td:last-child { border-right:none; }
+  .chem-label { font-family:'Rajdhani',sans-serif; font-size:.82rem; font-weight:700; color:var(--text); letter-spacing:.04em; padding-left:.25rem; white-space:nowrap; }
+  .chem-input-wrap { display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .chem-input-wrap input[type="number"] { height:36px; font-size:.92rem; border-radius:7px; min-width:70px; padding:0 .3rem; }
+  .chem-unit { font-size:.5rem; color:#3d4f6e; letter-spacing:.04em; }
+  .chem-total { font-family:'Rajdhani',sans-serif; font-size:1rem; font-weight:700; color:var(--accent2); text-align:center; letter-spacing:.04em; min-width:70px; }
+  .chem-total-unit { font-size:.55rem; color:var(--muted); display:block; margin-top:1px; }
+
+
+  /* ── REPLENISH SECTION ── */
+  .replenish-btn { width:100%; padding:.85rem; margin-bottom:.9rem; background:rgba(16,185,129,.08); border:1.5px dashed rgba(16,185,129,.4); color:var(--success); border-radius:var(--radius); font-family:'DM Sans',sans-serif; font-size:.9rem; font-weight:500; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all .18s; -webkit-tap-highlight-color:transparent; }
+  .replenish-btn:hover, .replenish-btn:active { background:rgba(16,185,129,.16); }
+  .replenish-btn svg { width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5; }
+  .replenish-section { display:none; background:rgba(16,185,129,.05); border:1px solid rgba(16,185,129,.2); border-radius:var(--radius); padding:1rem; margin-bottom:.9rem; }
+  .replenish-section.show { display:block; }
+  .replenish-section .card-title { color:var(--success); }
+  .replenish-section .card-title::after { background:rgba(16,185,129,.2); }
+  .replenish-grid { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+  .replenish-item { background:var(--surface2); border:1px solid rgba(16,185,129,.15); border-radius:10px; padding:.85rem .9rem; }
+  .replenish-item-title { font-family:'Rajdhani',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--success); margin-bottom:.6rem; }
+  .replenish-item .field { margin-bottom:0; }
+  .replenish-unit-row { display:flex; align-items:center; gap:6px; }
+  .replenish-unit-tag { font-size:.72rem; color:var(--muted); white-space:nowrap; flex-shrink:0; font-weight:500; }
+
+
+  /* ── LOGIN OVERLAY ── */
+  .login-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 1.5rem;
+    transition: opacity .4s ease;
+  }
+  .login-overlay.hiding { opacity: 0; pointer-events: none; }
+  .login-overlay.hidden { display: none; }
+
+  .login-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 18px; padding: 2rem 1.5rem;
+    width: 100%; max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  }
+  .login-logo {
+    width: 52px; height: 52px; background: var(--accent);
+    border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.1rem;
+  }
+  .login-logo svg { width: 24px; height: 24px; stroke: #fff; fill: none; stroke-width: 2.2; }
+  .login-title {
+    font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: #fff;
+    text-align: center; margin-bottom: .25rem;
+  }
+  .login-sub { font-size: .75rem; color: var(--muted); text-align: center; margin-bottom: 1.6rem; }
+
+  .login-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: .85rem; }
+  .login-field label { font-size: .72rem; color: var(--muted); font-weight: 500; letter-spacing: .02em; }
+  .login-field input {
+    width: 100%; height: var(--input-h); background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 9px;
+    padding: 0 .9rem; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: .95rem;
+    outline: none; transition: border-color .2s; -webkit-appearance: none;
+  }
+  .login-field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
+  .login-field input::placeholder { color: #3d4f6e; }
+
+  .login-btn {
+    width: 100%; padding: .95rem; background: var(--accent); border: none;
+    border-radius: 10px; color: #fff; font-family: 'Rajdhani', sans-serif;
+    font-size: 1.05rem; font-weight: 700; letter-spacing: .1em;
+    cursor: pointer; margin-top: .3rem;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all .2s; -webkit-tap-highlight-color: transparent;
+  }
+  .login-btn:active { transform: scale(.98); }
+  .login-btn:disabled { background: #2a3a55; color: var(--muted); cursor: not-allowed; }
+  .login-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+  .login-error {
+    margin-top: .75rem; padding: .6rem .9rem; border-radius: 8px;
+    background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.3);
+    color: var(--danger); font-size: .78rem; text-align: center;
+    display: none;
+  }
+  .login-error.show { display: block; }
+
+  /* ── LOGGED-IN BADGE (top bar) ── */
+  .user-badge {
+    display: none; margin-left: auto; flex-shrink: 0;
+    background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.25);
+    border-radius: 8px; padding: .3rem .7rem;
+    display: flex; align-items: center; gap: 6px;
+    font-size: .7rem; color: var(--accent2); font-weight: 500;
+  }
+  .user-badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.2; flex-shrink:0; }
+  .logout-btn {
+    background: none; border: none; color: var(--muted); cursor: pointer;
+    font-size: .65rem; text-decoration: underline; padding: 0; margin-left: 4px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .logout-btn:hover { color: var(--danger); }
+
+  /* ── LOCKED IDENTIFICATION FIELDS ── */
+  .id-locked {
+    height: var(--input-h); background: var(--surface2);
+    border: 1px solid rgba(99,180,255,.1); border-radius: 9px;
+    padding: 0 .9rem; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: .95rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .id-locked svg { width: 13px; height: 13px; stroke: var(--muted); fill: none; stroke-width: 2; flex-shrink: 0; }
+  .id-locked-val { color: var(--text); font-weight: 500; }
+  .id-locked-sub { font-size: .7rem; color: var(--muted); margin-left: auto; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div class="login-title">Plant Monitoring</div>
+    <div class="login-sub">Sign in to access your shift report</div>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Enter your username..." autocomplete="username" autocapitalize="none" />
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Enter your password..." autocomplete="current-password" />
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">
+      <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      SIGN IN
+    </button>
+    <div class="login-error" id="loginError">Incorrect username or password. Please try again.</div>
+  </div>
+</div>
+
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-icon">
+    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+  </div>
+  <div class="header-text">
+    <h1>PLANT MONITORING SYSTEM</h1>
+    <p>Shift Report · Multi-Discipline</p>
+  </div>
+  <div class="user-badge" id="userBadge" style="display:none;">
+    <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.2;flex-shrink:0;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span id="badgeName">—</span>
+    <button class="logout-btn" onclick="doLogout()">logout</button>
+  </div>
+</div>
+<div class="live-bar"><div class="dot"></div><span>Live · Syncs to dashboard</span></div>
+
+<!-- TAB NAV -->
+<div class="tab-nav-wrap">
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('electrical')" id="tab-electrical">
+      <svg viewBox="0 0 24 24"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Line
+    </button>
+    <button class="tab-btn" onclick="switchTab('vibration')" id="tab-vibration">
+      <svg viewBox="0 0 24 24"><path d="M2 12h2l3-9 4 18 3-9h2"/><line x1="20" y1="8" x2="20" y2="16"/></svg>
+      Vibration
+    </button>
+    <button class="tab-btn disabled" id="tab-fuel">
+      <svg viewBox="0 0 24 24"><path d="M3 22V8l7-6 7 6v14"/><rect x="9" y="14" width="4" height="8"/><path d="M17 8h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1"/></svg>
+      Fuel
+      <span class="tab-badge">SOON</span>
+    </button>
+    <button class="tab-btn disabled" id="tab-chemical">
+      <svg viewBox="0 0 24 24"><path d="M9 3h6v10l4 8H5l4-8V3z"/><line x1="9" y1="7" x2="15" y2="7"/></svg>
+      Chemical
+      <span class="tab-badge">SOON</span>
+    </button>
+    <button class="tab-btn disabled" id="tab-purchase">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Purchase
+      <span class="tab-badge">SOON</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('technicians')" id="tab-technicians">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Technicians
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     TAB 1 — LINE MONITORING (ELECTRICAL)
+════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="panel-electrical">
+<div class="container">
+<form id="electricalForm">
+
+  <div class="card">
+    <div class="card-title">Identification</div>
+    <div class="field">
+      <label>Plant <span class="required">*</span></label>
+      <select id="elec-plant" required>
+        <option value="" disabled selected>Select plant...</option>
+        <option value="HOREB">HOREB</option>
+        <option value="ARGAO">ARGAO</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Technician Name <span class="required">*</span></label>
+      <div class="id-locked"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="elec-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="elec-tech" name="elec_tech" />
+    </div>
+    <div class="row-2">
+      <div class="field">
+        <label>Shift</label>
+        <div class="id-locked"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="elec-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="elec-shift" name="elec_shift" />
+      </div>
+      <div class="field">
+        <label>Date &amp; Time</label>
+        <div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="deviceList"></div>
+
+  <button type="button" class="add-device-btn" onclick="addDevice()">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add Device
+  </button>
+
+  <button type="submit" class="submit-btn" id="elecSubmitBtn">
+    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    SUBMIT LINE REPORT
+  </button>
+
+</form>
+</div>
+</div><!-- /panel-electrical -->
+
+<!-- ═══════════════════════════════════════════════
+     TAB 2 — VIBRATION MONITORING
+════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-vibration">
+<div class="container">
+<form id="vibrationForm">
+
+  <!-- Identification -->
+  <div class="card">
+    <div class="card-title">Identification</div>
+    <div class="field">
+      <label>Plant <span class="required">*</span></label>
+      <select id="vib-plant" required>
+        <option value="" disabled selected>Select plant...</option>
+        <option value="HOREB">HOREB</option>
+        <option value="ARGAO">ARGAO</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Technician Name <span class="required">*</span></label>
+      <div class="id-locked"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="vib-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="vib-tech" name="vib_tech" />
+    </div>
+    <div class="row-2">
+      <div class="field">
+        <label>Shift</label>
+        <div class="id-locked"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="vib-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="vib-shift" name="vib_shift" />
+      </div>
+      <div class="field">
+        <label>Date &amp; Time</label>
+        <div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Equipment Vibration Table -->
+  <div class="card">
+    <div class="card-title">Equipment Readings</div>
+
+    <div class="vib-table-wrap">
+      <table class="vib-table" id="vibTable">
+        <thead>
+          <tr>
+            <th class="col-point">Point</th>
+            <th class="col-location">Location</th>
+            <th>Horizontal</th>
+            <th>Vertical</th>
+            <th>Axial</th>
+          </tr>
+        </thead>
+        <tbody id="vibTableBody">
+          <!-- Row 1: M1 — Motor Drive End Bearing -->
+          <tr>
+            <td><div class="vib-point">M1</div></td>
+            <td><div class="vib-location">Motor Drive End Bearing<span class="sub">Motor</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r1_h" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r1_v" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r1_a" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+          </tr>
+          <!-- Row 2: M2 — Motor Non-Drive End Bearing -->
+          <tr>
+            <td><div class="vib-point">M2</div></td>
+            <td><div class="vib-location">Motor Non-Drive End Bearing<span class="sub">Motor</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r2_h" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r2_v" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r2_a" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+          </tr>
+          <!-- Row 3: P1 — Input Shaft Housing -->
+          <tr>
+            <td><div class="vib-point">P1</div></td>
+            <td><div class="vib-location">Input Shaft Housing<span class="sub">Gearbox / Pump</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r3_h" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r3_v" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r3_a" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+          </tr>
+          <!-- Row 4: P2 — Front Housing -->
+          <tr>
+            <td><div class="vib-point">P2</div></td>
+            <td><div class="vib-location">Front Housing<span class="sub">Gearbox / Pump</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r4_h" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r4_v" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r4_a" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+          </tr>
+          <!-- Row 5: B1 — Motor Base -->
+          <tr>
+            <td><div class="vib-point">B1</div></td>
+            <td><div class="vib-location">Motor Base<span class="sub">Structure</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r5_h" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r5_v" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r5_a" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+          </tr>
+          <!-- Row 6: B2 — Equipment Base/Frame -->
+          <tr>
+            <td><div class="vib-point">B2</div></td>
+            <td><div class="vib-location">Equipment Base / Frame<span class="sub">Structure</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r6_h" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r6_v" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+            <td><div class="vib-input-wrap"><input type="number" name="vib_r6_a" placeholder="0.0" step="0.01" inputmode="decimal" /><span class="vib-unit">mm/s</span></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Overall remarks -->
+    <div class="field" style="margin-top:.2rem;">
+      <label>Remarks / Observations</label>
+      <textarea name="vib_remarks" placeholder="Note any abnormal readings, unusual noise, heat, etc..."></textarea>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn" id="vibSubmitBtn">
+    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    SUBMIT VIBRATION REPORT
+  </button>
+
+</form>
+</div>
+</div><!-- /panel-vibration -->
+
+<!-- ═══════ COMING SOON PANELS ═══════ -->
+<div class="tab-panel" id="panel-fuel">
+  <div class="container"><div class="coming-soon">
+    <div class="coming-soon-icon"><svg viewBox="0 0 24 24"><path d="M3 22V8l7-6 7 6v14"/><rect x="9" y="14" width="4" height="8"/><path d="M17 8h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1"/></svg></div>
+    <h3>Fuel Monitoring</h3>
+    <p>This section is under development and will be available soon.</p>
+  </div></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 4 — CHEM & SOFTENER
+══════════════════════════════════════ -->
+<div class="tab-panel" id="panel-chemical">
+<div class="container">
+<form id="chemicalForm">
+
+  <div class="card">
+    <div class="card-title">Identification</div>
+    <div class="field">
+      <label>Plant <span class="required">*</span></label>
+      <select id="chem-plant" required>
+        <option value="" disabled selected>Select plant...</option>
+        <option value="HOREB">HOREB</option>
+        <option value="ARGAO">ARGAO</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Technician Name <span class="required">*</span></label>
+      <div class="id-locked" id="chem-tech-display"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="chem-tech-val">—</span><span class="id-locked-sub">signed in</span></div>
+      <input type="hidden" id="chem-tech" name="chem_tech" />
+    </div>
+    <div class="row-2">
+      <div class="field">
+        <label>Shift</label>
+        <div class="id-locked" id="chem-shift-display"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="chem-shift-val">—</span><span class="id-locked-sub">assigned</span></div>
+        <input type="hidden" id="chem-shift" name="chem_shift" />
+      </div>
+      <div class="field">
+        <label>Date &amp; Time</label>
+        <div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">--</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Chemical &amp; Softener Readings</div>
+    <div class="chem-table-wrap">
+      <table class="chem-table">
+        <thead>
+          <tr>
+            <th class="col-chem">Chemical</th>
+            <th>Present Level</th>
+            <th>Unit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="chem-label">Scale Inhibitor</div></td>
+            <td><div class="chem-input-wrap"><input type="number" id="chem-si-pres" name="chem_si_pres" placeholder="0.0" step="0.01" inputmode="decimal" /></div></td>
+            <td><div style="font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;color:var(--muted);text-align:center;">Liters</div></td>
+          </tr>
+          <tr>
+            <td><div class="chem-label">Oxygen Scavenger</div></td>
+            <td><div class="chem-input-wrap"><input type="number" id="chem-os-pres" name="chem_os_pres" placeholder="0.0" step="0.01" inputmode="decimal" /></div></td>
+            <td><div style="font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;color:var(--muted);text-align:center;">Liters</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="field" style="margin-top:.1rem;">
+      <label>Remarks / Observations</label>
+      <textarea name="chem_remarks" placeholder="Note any abnormal levels, dosing issues, drum status..."></textarea>
+    </div>
+  </div>
+
+  <!-- MAINTENANCE CHECKLIST -->
+  <div class="card">
+    <div class="card-title">Maintenance Checklist</div>
+    <div class="checklist-grid">
+      <div class="check-item">
+        <span class="check-label">Refill Scale Inhibitor<span class="check-unit">(max 1 L)</span></span>
+        <div class="check-input-wrap">
+          <input type="number" id="chk-si" name="chk_si" placeholder="0" min="0" max="1" step="0.1" inputmode="decimal" />
+          <span class="check-unit-tag">L</span>
+        </div>
+      </div>
+      <div class="check-item">
+        <span class="check-label">Refill Oxygen Scavenger<span class="check-unit">(max 4 L)</span></span>
+        <div class="check-input-wrap">
+          <input type="number" id="chk-os" name="chk_os" placeholder="0" min="0" max="4" step="0.1" inputmode="decimal" />
+          <span class="check-unit-tag">L</span>
+        </div>
+      </div>
+      <div class="check-item">
+        <span class="check-label">Refill Salt<span class="check-unit">(max 50 kg)</span></span>
+        <div class="check-input-wrap">
+          <input type="number" id="chk-salt" name="chk_salt" placeholder="0" min="0" max="50" step="0.5" inputmode="decimal" />
+          <span class="check-unit-tag">kg</span>
+        </div>
+      </div>
+      <div class="check-item">
+        <span class="check-label">Manual Regen<span class="check-unit">(max 4)</span></span>
+        <div class="check-input-wrap">
+          <input type="number" id="chk-regen" name="chk_regen" placeholder="0" min="0" max="4" step="1" inputmode="numeric" />
+          <span class="check-unit-tag">times</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPLENISH BUTTON -->
+  <button type="button" class="replenish-btn" onclick="toggleReplenish()">
+    <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    Log Chemical Replenishment
+  </button>
+
+  <div class="replenish-section" id="replenishSection">
+    <div class="card-title">Chemical Replenishment</div>
+    <div class="replenish-grid">
+      <div class="replenish-item">
+        <div class="replenish-item-title">Scale Inhibitor</div>
+        <div class="field">
+          <label>Volume Added</label>
+          <div class="replenish-unit-row">
+            <input type="number" name="chem_si_replenish" placeholder="0.0" step="0.01" inputmode="decimal" style="flex:1;" />
+            <span class="replenish-unit-tag">Liters</span>
+          </div>
+        </div>
+      </div>
+      <div class="replenish-item">
+        <div class="replenish-item-title">Oxygen Scavenger</div>
+        <div class="field">
+          <label>Volume Added</label>
+          <div class="replenish-unit-row">
+            <input type="number" name="chem_os_replenish" placeholder="0.0" step="0.01" inputmode="decimal" style="flex:1;" />
+            <span class="replenish-unit-tag">Liters</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:.65rem;margin-bottom:0;">
+      <label>Replenishment Remarks</label>
+      <textarea name="chem_replenish_remarks" placeholder="Batch no., supplier, condition of chemical, etc..."></textarea>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn" id="chemSubmitBtn">
+    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    SUBMIT CHEMICAL REPORT
+  </button>
+
+</form>
+</div>
+</div><!-- /panel-chemical -->
+
+<!-- ══════════════════════════════════════
+     TAB 5 — PURCHASE REQUEST
+══════════════════════════════════════ -->
+<div class="tab-panel" id="panel-purchase">
+<div class="container">
+<form id="purchaseForm">
+
+  <div class="card">
+    <div class="card-title">Identification</div>
+    <div class="field">
+      <label>Plant <span class="required">*</span></label>
+      <select id="pr-plant" required>
+        <option value="" disabled selected>Select plant...</option>
+        <option value="HOREB">HOREB</option>
+        <option value="ARGAO">ARGAO</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Requested By <span class="required">*</span></label>
+      <div class="id-locked" id="pr-tech-display"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="pr-tech-val">—</span><span class="id-locked-sub">signed in</span></div>
+      <input type="hidden" id="pr-tech" name="pr_tech" />
+    </div>
+    <div class="row-2">
+      <div class="field">
+        <label>Date &amp; Time</label>
+        <div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">--</span></div>
+      </div>
+      <div class="field">
+        <label>Priority</label>
+        <select id="pr-priority" name="pr_priority">
+          <option value="Routine">Routine</option>
+          <option value="Urgent">Urgent</option>
+          <option value="Critical">Critical</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ITEMS LIST -->
+  <div id="prItemList"></div>
+
+  <button type="button" class="add-device-btn" onclick="addPRItem()" style="margin-bottom:.9rem;">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add Item
+  </button>
+
+  <button type="submit" class="submit-btn" id="prSubmitBtn">
+    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    SUBMIT PURCHASE REQUEST
+  </button>
+
+</form>
+</div>
+</div><!-- /panel-purchase -->
+
+
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmIadM5HDk4S9czfoqXVH4SLMVZo0anhaxbV7MQzpqz9YLnsLuSObs_8wAB9EWSwwp/exec';
+
+  /* ── TABS ── */
+  const PANELS = ['electrical','vibration','fuel','chemical','purchase'];
+  function switchTab(id) {
+    PANELS.forEach(p => {
+      document.getElementById('panel-' + p).classList.toggle('active', p === id);
+      document.getElementById('tab-' + p).classList.toggle('active', p === id);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  // Disable click on "soon" tabs
+  document.querySelectorAll('.tab-btn.disabled').forEach(btn => {
+    btn.addEventListener('click', e => e.preventDefault());
+  });
+  /* ── LIVE TIMESTAMP ── */
+  const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DA=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function tick(){
+    const d = new Date();
+    const s = DA[d.getDay()]+' '+MO[d.getMonth()]+' '+d.getDate()+
+              ' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+    document.querySelectorAll('.ts-display').forEach(el => el.textContent = s);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ── LINE MONITORING DEVICES ── */
+  let count = 0;
+  function addDevice(){
+    count++;
+    const id = count;
+    const wrap = document.createElement('div');
+    wrap.className = 'device-card'; wrap.id = 'dc-' + id;
+    wrap.innerHTML = `
+      <div class="device-card-header">
+        <div class="device-num">Device ${id}</div>
+        <button type="button" class="del-btn" id="del-${id}" onclick="removeDevice(${id})" title="Remove">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+      <div class="device-card-body">
+        <div class="field">
+          <label>Device</label>
+          <input type="text" name="d_device_${id}" placeholder="e.g. Breaker 1" />
+        </div>
+        <div class="field">
+          <label>Location</label>
+          <input type="text" name="d_location_${id}" placeholder="e.g. Hammer Mill" />
+        </div>
+        <div class="reading-group">
+          <div class="reading-group-title">Voltage (V)</div>
+          <div class="readings-3">
+            <div class="reading-cell"><div class="rc-label">V<sub>AB</sub></div><input type="number" name="d_vAB_${id}" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Volts</div></div>
+            <div class="reading-cell"><div class="rc-label">V<sub>BC</sub></div><input type="number" name="d_vBC_${id}" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Volts</div></div>
+            <div class="reading-cell"><div class="rc-label">V<sub>CA</sub></div><input type="number" name="d_vCA_${id}" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Volts</div></div>
+          </div>
+        </div>
+        <div class="reading-group">
+          <div class="reading-group-title">Current (A)</div>
+          <div class="readings-3">
+            <div class="reading-cell"><div class="rc-label">I<sub>A</sub></div><input type="number" name="d_iA_${id}" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Amps</div></div>
+            <div class="reading-cell"><div class="rc-label">I<sub>B</sub></div><input type="number" name="d_iB_${id}" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Amps</div></div>
+            <div class="reading-cell"><div class="rc-label">I<sub>C</sub></div><input type="number" name="d_iC_${id}" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Amps</div></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <div class="status-row">
+            <div class="status-btn ok"  data-id="${id}" data-val="Normal"   onclick="setStatus(this)">✓ Normal</div>
+            <div class="status-btn"     data-id="${id}" data-val="Warning"  onclick="setStatus(this)">⚠ Warning</div>
+            <div class="status-btn"     data-id="${id}" data-val="Critical" onclick="setStatus(this)">✕ Critical</div>
+          </div>
+          <input type="hidden" name="d_status_${id}" value="Normal" />
+        </div>
+        <div class="field">
+          <label>Remarks</label>
+          <textarea name="d_remarks_${id}" placeholder="Observations for this device..."></textarea>
+        </div>
+      </div>`;
+    document.getElementById('deviceList').appendChild(wrap);
+    updateDel();
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function removeDevice(id){
+    const el = document.getElementById('dc-' + id);
+    if(el) el.remove();
+    updateDel(); renumber();
+  }
+  function renumber(){
+    document.querySelectorAll('.device-card').forEach((c,i) => {
+      c.querySelector('.device-num').textContent = 'Device ' + (i+1);
+    });
+  }
+  function updateDel(){
+    const cards = document.querySelectorAll('.device-card');
+    cards.forEach(c => { c.querySelector('.del-btn').disabled = cards.length === 1; });
+  }
+  function setStatus(el){
+    const id = el.dataset.id;
+    el.closest('.device-card-body').querySelectorAll('.status-btn').forEach(b => b.className = 'status-btn');
+    const v = el.dataset.val;
+    el.classList.add(v==='Normal'?'ok':v==='Warning'?'wrn':'crit');
+    el.closest('.device-card-body').querySelector(`[name="d_status_${id}"]`).value = v;
+  }
+  addDevice();
+
+  /* ── TOAST ── */
+  function showToast(msg, err){
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = 'toast' + (err?' error':'');
+    t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  /* ── JSONP ── */
+  function submitViaJSONP(params, onSuccess, onError){
+    const cbName = 'cb_' + Date.now();
+    const script = document.createElement('script');
+    const timeout = setTimeout(() => { cleanup(); onError('Timeout'); }, 10000);
+    function cleanup(){ clearTimeout(timeout); delete window[cbName]; if(script.parentNode) script.parentNode.removeChild(script); }
+    window[cbName] = function(response){
+      cleanup();
+      if(response.result === 'success') onSuccess();
+      else onError(response.message || 'Unknown error');
+    };
+    params.callback = cbName;
+    const qs = Object.entries(params).map(([k,v]) => encodeURIComponent(k)+'='+encodeURIComponent(typeof v==='object'?JSON.stringify(v):v)).join('&');
+    script.src = SCRIPT_URL + '?' + qs;
+    script.onerror = () => { cleanup(); onError('Network error'); };
+    document.head.appendChild(script);
+  }
+
+  /* ── LINE MONITORING SUBMIT ── */
+  document.getElementById('electricalForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const btn = document.getElementById('elecSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="animation:spin 1s linear infinite;width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg> Submitting...';
+    const now = new Date();
+    const devices = [];
+    document.querySelectorAll('.device-card').forEach(card => {
+      const g = n => card.querySelector(`[name^="d_${n}_"]`)?.value || '';
+      devices.push({ device:g('device'), location:g('location'), vAB:g('vAB'), vBC:g('vBC'), vCA:g('vCA'), iA:g('iA'), iB:g('iB'), iC:g('iC'), status:g('status'), remarks:g('remarks') });
+    });
+    const params = { type:'electrical', timestamp:now.toISOString(), date:now.toLocaleDateString('en-PH'), time:now.toLocaleTimeString('en-PH'), plant:document.getElementById('elec-plant').value, technician:document.getElementById('elec-tech').value, shift:document.getElementById('elec-shift').value, devices };
+    submitViaJSONP(params,
+      function(){ showToast('✓ Line report submitted!'); document.getElementById('electricalForm').reset(); document.getElementById('deviceList').innerHTML=''; count=0; addDevice(); window.scrollTo({top:0,behavior:'smooth'}); btn.disabled=false; btn.innerHTML='<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> SUBMIT LINE REPORT'; },
+      function(err){ showToast('⚠ Failed. Check your connection.', true); btn.disabled=false; btn.innerHTML='<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> SUBMIT LINE REPORT'; }
+    );
+  });
+
+  /* ── VIBRATION SUBMIT ── */
+  const VIB_ROWS = [
+    { point:'M1', location:'Motor Drive End Bearing' },
+    { point:'M2', location:'Motor Non-Drive End Bearing' },
+    { point:'P1', location:'Input Shaft Housing' },
+    { point:'P2', location:'Front Housing' },
+    { point:'B1', location:'Motor Base' },
+    { point:'B2', location:'Equipment Base / Frame' },
+  ];
+
+  document.getElementById('vibrationForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const btn = document.getElementById('vibSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="animation:spin 1s linear infinite;width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg> Submitting...';
+    const now = new Date();
+    const form = document.getElementById('vibrationForm');
+    const rows = VIB_ROWS.map((meta, i) => {
+      const r = i + 1;
+      return {
+        point:    meta.point,
+        location: meta.location,
+        h: form.querySelector(`[name="vib_r${r}_h"]`)?.value || '',
+        v: form.querySelector(`[name="vib_r${r}_v"]`)?.value || '',
+        a: form.querySelector(`[name="vib_r${r}_a"]`)?.value || '',
+      };
+    });
+    const params = { type:'vibration', timestamp:now.toISOString(), date:now.toLocaleDateString('en-PH'), time:now.toLocaleTimeString('en-PH'), plant:document.getElementById('vib-plant').value, technician:document.getElementById('vib-tech').value, shift:document.getElementById('vib-shift').value, remarks:form.querySelector('[name="vib_remarks"]').value, rows };
+    submitViaJSONP(params,
+      function(){ showToast('✓ Vibration report submitted!'); document.getElementById('vibrationForm').reset(); window.scrollTo({top:0,behavior:'smooth'}); btn.disabled=false; btn.innerHTML='<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> SUBMIT VIBRATION REPORT'; },
+      function(err){ showToast('⚠ Failed. Check your connection.', true); btn.disabled=false; btn.innerHTML='<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> SUBMIT VIBRATION REPORT'; }
+    );
+  });
+
+
+  /* ── MAINTENANCE CHECKLIST ── */
+  function getChecklistValues() {
+    return {
+      siRefill:   document.getElementById('chk-si')   ? document.getElementById('chk-si').value   : '',
+      osRefill:   document.getElementById('chk-os')   ? document.getElementById('chk-os').value   : '',
+      saltRefill: document.getElementById('chk-salt') ? document.getElementById('chk-salt').value : '',
+      regenCount: document.getElementById('chk-regen')? document.getElementById('chk-regen').value: '',
+    };
+  }
+
+  function resetChecklist() {
+    ['chk-si','chk-os','chk-salt','chk-regen'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+  }
+
+  /* ── FUEL DELIVERY TOGGLE ── */
+  var deliveryOpen=false;
+  function toggleFuelDelivery(){
+    deliveryOpen=!deliveryOpen;
+    document.getElementById('fuelDeliverySection').classList.toggle('show',deliveryOpen);
+  }
+
+  /* ── FUEL SUBMIT ── */
+  document.getElementById('fuelForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = document.getElementById('fuelSubmitBtn');
+    btn.disabled=true; btn.innerHTML=SPIN_SVG+' Submitting...';
+    var now=new Date(), form=document.getElementById('fuelForm');
+    function g(n){ var el=form.querySelector('[name="'+n+'"]'); return el?el.value:''; }
+
+    var dayPres  = parseFloat(g('fuel_day_pres'));
+    var mainPres = parseFloat(g('fuel_main_pres'));
+    var dayVolL  = !isNaN(dayPres)  ? cylL(dayPres,FUEL_DIMS.dayD,FUEL_DIMS.dayL).toFixed(1)   : '';
+    var mainVolL = !isNaN(mainPres) ? cylL(mainPres,FUEL_DIMS.mainD,FUEL_DIMS.mainL).toFixed(1) : '';
+    var params = {
+      type:       'fuel',
+      timestamp:  now.toISOString(),
+      date:       now.toLocaleDateString('en-PH'),
+      time:       now.toLocaleTimeString('en-PH'),
+      plant:      document.getElementById('fuel-plant').value,
+      technician: document.getElementById('fuel-tech').value,
+      shift:      document.getElementById('fuel-shift').value,
+      dayTankPres:  g('fuel_day_pres'),
+      dayTankVolL:  dayVolL,
+      mainTankPres: g('fuel_main_pres'),
+      mainTankVolL: mainVolL,
+      remarks:      g('fuel_remarks'),
+      hasDelivery:  deliveryOpen ? 'YES' : 'NO',
+      deliveryVol:  deliveryOpen ? g('fuel_delivery_vol')      : '',
+      deliverySupplier: deliveryOpen ? g('fuel_delivery_supplier') : '',
+      deliveryRemarks:  deliveryOpen ? g('fuel_delivery_remarks')  : '',
+    };
+    submitViaJSONP(params,
+      function(){ showToast('Fuel report submitted!'); document.getElementById('fuelForm').reset(); deliveryOpen=false; document.getElementById('fuelDeliverySection').classList.remove('show'); calcFuel(); window.scrollTo({top:0,behavior:'smooth'}); btn.disabled=false; btn.innerHTML=SEND_SVG+' SUBMIT FUEL REPORT'; },
+      function(){ showToast('Failed. Check connection.',true); btn.disabled=false; btn.innerHTML=SEND_SVG+' SUBMIT FUEL REPORT'; }
+    );
+  });
+
+  /* ── CHEMICAL SUBMIT ── */
+  document.getElementById('chemicalForm') && document.getElementById('chemicalForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('chemSubmitBtn');
+    btn.disabled = true; btn.innerHTML = SPIN_SVG + ' Submitting...';
+    var now = new Date(), form = document.getElementById('chemicalForm');
+    function g(n) { var el = form.querySelector('[name="' + n + '"]'); return el ? el.value : ''; }
+    var siPrev = parseFloat(g('chem_si_prev')), siPres = parseFloat(g('chem_si_pres'));
+    var osPrev = parseFloat(g('chem_os_prev')), osPres = parseFloat(g('chem_os_pres'));
+    var params = {
+      type: 'chemical',
+      timestamp: now.toISOString(), date: now.toLocaleDateString('en-PH'), time: now.toLocaleTimeString('en-PH'),
+      plant: document.getElementById('chem-plant').value,
+      technician: document.getElementById('chem-tech').value,
+      shift: document.getElementById('chem-shift').value,
+      siPrev: g('chem_si_prev'), siPres: g('chem_si_pres'),
+      siConsumed: (!isNaN(siPrev) && !isNaN(siPres)) ? (siPrev - siPres).toFixed(2) : '',
+      osPrev: g('chem_os_prev'), osPres: g('chem_os_pres'),
+      osConsumed: (!isNaN(osPrev) && !isNaN(osPres)) ? (osPrev - osPres).toFixed(2) : '',
+      remarks: g('chem_remarks'),
+      siRefill:   document.getElementById('chk-si')    ? document.getElementById('chk-si').value    : '',
+      osRefill:   document.getElementById('chk-os')    ? document.getElementById('chk-os').value    : '',
+      saltRefill: document.getElementById('chk-salt')  ? document.getElementById('chk-salt').value  : '',
+      regenCount: document.getElementById('chk-regen') ? document.getElementById('chk-regen').value : '',
+      hasReplenish: replenishOpen ? 'YES' : 'NO',
+      siReplenish:  replenishOpen ? g('chem_si_replenish') : '',
+      osReplenish:  replenishOpen ? g('chem_os_replenish') : '',
+      replenishRemarks: replenishOpen ? g('chem_replenish_remarks') : '',
+    };
+    submitViaJSONP(params,
+      function() { showToast('Chemical report submitted!'); document.getElementById('chemicalForm').reset(); resetChecklist(); replenishOpen=false; document.getElementById('replenishSection').classList.remove('show'); window.scrollTo({top:0,behavior:'smooth'}); btn.disabled=false; btn.innerHTML=SEND_SVG+' SUBMIT CHEMICAL REPORT'; },
+      function() { showToast('Failed. Check connection.', true); btn.disabled=false; btn.innerHTML=SEND_SVG+' SUBMIT CHEMICAL REPORT'; }
+    );
+  });
+
+  /* ══════════════════════════════════════════
+     LOGIN SYSTEM
+  ══════════════════════════════════════════ */
+  var currentUser = null;
+
+  // Allow Enter key on login fields
+  ['loginUser','loginPass'].forEach(function(id) {
+    document.getElementById(id).addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') doLogin();
+    });
+  });
+
+  const SPIN_SVG = '<svg viewBox="0 0 24 24" style="animation:spin 1s linear infinite;width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>';
+  const SEND_SVG = '<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+
+  function doLogin() {
+    var username = document.getElementById('loginUser').value.trim();
+    var password = document.getElementById('loginPass').value;
+    var btn      = document.getElementById('loginBtn');
+    var errEl    = document.getElementById('loginError');
+
+    if (!username || !password) {
+      errEl.textContent = 'Please enter both username and password.';
+      errEl.classList.add('show'); return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = SPIN_SVG + ' Signing in...';
+    errEl.classList.remove('show');
+
+    // Call Apps Script to verify credentials
+    var cbName = 'loginCb_' + Date.now();
+    var s = document.createElement('script');
+    var timeout = setTimeout(function() {
+      cleanup(); loginFailed('Connection timeout. Check your network.');
+    }, 10000);
+
+    function cleanup() {
+      clearTimeout(timeout); delete window[cbName];
+      if (s.parentNode) s.parentNode.removeChild(s);
+    }
+
+    window[cbName] = function(res) {
+      cleanup();
+      if (res && res.result === 'success' && res.user) {
+        loginSuccess(res.user);
+      } else {
+        loginFailed(res && res.message ? res.message : 'Incorrect username or password.');
+      }
+    };
+
+    s.onerror = function() { cleanup(); loginFailed('Network error. Try again.'); };
+    s.src = SCRIPT_URL + '?action=login&username=' + encodeURIComponent(username)
+           + '&password=' + encodeURIComponent(password) + '&callback=' + cbName;
+    document.head.appendChild(s);
+  }
+
+  function loginSuccess(user) {
+    currentUser = user;
+
+    // Fill + lock all identification fields
+    ['elec','vib','fuel','chem','pr'].forEach(function(prefix) {
+      document.getElementById(prefix + '-plant').value = user.plant || '';
+      document.getElementById(prefix + '-plant-val').textContent = user.plant || '—';
+      document.getElementById(prefix + '-tech').value = user.name || '';
+      document.getElementById(prefix + '-tech-val').textContent = user.name || '—';
+      document.getElementById(prefix + '-shift').value = user.shift || '';
+      document.getElementById(prefix + '-shift-val').textContent = (user.shift || '—') + ' Shift';
+    });
+
+    // Show user badge in header
+    document.getElementById('badgeName').textContent = user.name;
+    document.getElementById('userBadge').style.display = 'flex';
+
+    // Dismiss login overlay
+    var overlay = document.getElementById('loginOverlay');
+    overlay.classList.add('hiding');
+    setTimeout(function() { overlay.classList.add('hidden'); }, 400);
+
+    // Reset login form
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginBtn').disabled = false;
+    document.getElementById('loginBtn').innerHTML =
+      '<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> SIGN IN';
+
+    showToast('Welcome, ' + user.name + '!');
+    loadLastFuelReadings();
+  }
+
+  function loginFailed(msg) {
+    document.getElementById('loginError').textContent = msg;
+    document.getElementById('loginError').classList.add('show');
+    document.getElementById('loginBtn').disabled = false;
+    document.getElementById('loginBtn').innerHTML =
+      '<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> SIGN IN';
+    // Shake the card
+    var card = document.querySelector('.login-card');
+    card.style.animation = 'none';
+    card.offsetHeight; // reflow
+    card.style.animation = 'shake .35s ease';
+  }
+
+  function doLogout() {
+    currentUser = null;
+    // Clear all id fields
+    ['elec','vib','fuel','chem','pr'].forEach(function(prefix) {
+      ['plant','tech','shift'].forEach(function(field) {
+        var el = document.getElementById(prefix + '-' + field);
+        if (el) el.value = '';
+        var val = document.getElementById(prefix + '-' + field + '-val');
+        if (val) val.textContent = '—';
+      });
+    });
+    document.getElementById('userBadge').style.display = 'none';
+    var overlay = document.getElementById('loginOverlay');
+    overlay.classList.remove('hiding','hidden');
+    showToast('Signed out.');
+  }
+
+
+
+
+  /* ══════════════════════════════════════
+     PURCHASE REQUEST
+  ══════════════════════════════════════ */
+  var prCount = 0;
+
+  function addPRItem() {
+    prCount++;
+    var id = prCount;
+    var wrap = document.createElement('div');
+    wrap.className = 'device-card'; wrap.id = 'pr-' + id;
+    wrap.innerHTML =
+      '<div class="device-card-header">' +
+        '<div class="device-num">Item ' + id + '</div>' +
+        '<button type="button" class="del-btn" onclick="removePRItem(' + id + ')" ' + (id===1?'disabled':'') + '>' +
+          '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>' +
+        '</button>' +
+      '</div>' +
+      '<div class="device-card-body">' +
+        '<div class="field"><label>Item Name <span class="required">*</span></label>' +
+          '<input type="text" name="pr_item_' + id + '" placeholder="e.g. Ball valve 1/2 inch" required /></div>' +
+        '<div class="field"><label>Specifications / Description</label>' +
+          '<textarea name="pr_specs_' + id + '" placeholder="Brand, size, model, material, etc..."></textarea></div>' +
+        '<div class="row-2">' +
+          '<div class="field"><label>Quantity <span class="required">*</span></label>' +
+            '<input type="number" name="pr_qty_' + id + '" placeholder="1" min="1" step="1" inputmode="numeric" style="text-align:center;font-size:1.1rem;" /></div>' +
+          '<div class="field"><label>Unit</label>' +
+            '<select name="pr_unit_' + id + '">' +
+              '<option value="pcs">pcs</option><option value="sets">sets</option>' +
+              '<option value="kg">kg</option><option value="liters">liters</option>' +
+              '<option value="meters">meters</option><option value="boxes">boxes</option>' +
+              '<option value="rolls">rolls</option><option value="pairs">pairs</option>' +
+            '</select></div>' +
+        '</div>' +
+        '<div class="field"><label>Reason / Purpose <span class="required">*</span></label>' +
+          '<textarea name="pr_reason_' + id + '" placeholder="Why is this needed? Which equipment or system?"></textarea></div>' +
+      '</div>';
+    document.getElementById('prItemList').appendChild(wrap);
+    updatePRDel();
+    wrap.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  function removePRItem(id) {
+    var el = document.getElementById('pr-' + id);
+    if(el) el.remove();
+    updatePRDel();
+    document.querySelectorAll('#prItemList .device-card').forEach(function(c,i){
+      c.querySelector('.device-num').textContent = 'Item ' + (i+1);
+    });
+  }
+
+  function updatePRDel() {
+    var cards = document.querySelectorAll('#prItemList .device-card');
+    cards.forEach(function(c){ c.querySelector('.del-btn').disabled = cards.length === 1; });
+  }
+
+  if(document.getElementById('prItemList')) addPRItem();
+
+  /* PURCHASE SUBMIT */
+  document.getElementById('purchaseForm') && document.getElementById('purchaseForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('prSubmitBtn');
+    btn.disabled = true; btn.innerHTML = SPIN_SVG + ' Submitting...';
+    var now = new Date(), form = document.getElementById('purchaseForm');
+    function g(n){ var el=form.querySelector('[name="'+n+'"]'); return el?el.value:''; }
+    var items = [];
+    document.querySelectorAll('#prItemList .device-card').forEach(function(card, i) {
+      var r = i + 1;
+      items.push({
+        item:   card.querySelector('[name^="pr_item_"]')  ? card.querySelector('[name^="pr_item_"]').value   : '',
+        specs:  card.querySelector('[name^="pr_specs_"]') ? card.querySelector('[name^="pr_specs_"]').value  : '',
+        qty:    card.querySelector('[name^="pr_qty_"]')   ? card.querySelector('[name^="pr_qty_"]').value    : '',
+        unit:   card.querySelector('[name^="pr_unit_"]')  ? card.querySelector('[name^="pr_unit_"]').value   : '',
+        reason: card.querySelector('[name^="pr_reason_"]')? card.querySelector('[name^="pr_reason_"]').value : '',
+      });
+    });
+    var params = {
+      type:       'purchase',
+      timestamp:  now.toISOString(),
+      date:       now.toLocaleDateString('en-PH'),
+      time:       now.toLocaleTimeString('en-PH'),
+      plant:      document.getElementById('pr-plant').value,
+      technician: document.getElementById('pr-tech').value,
+      priority:   g('pr_priority'),
+      items:      JSON.stringify(items),
+    };
+    submitViaJSONP(params,
+      function(){ showToast('Purchase request submitted!'); document.getElementById('purchaseForm').reset(); document.getElementById('prItemList').innerHTML=''; prCount=0; addPRItem(); window.scrollTo({top:0,behavior:'smooth'}); btn.disabled=false; btn.innerHTML=SEND_SVG+' SUBMIT PURCHASE REQUEST'; },
+      function(){ showToast('Failed. Check connection.',true); btn.disabled=false; btn.innerHTML=SEND_SVG+' SUBMIT PURCHASE REQUEST'; }
+    );
+  });
+
+
+
+</script>
+</body>
+</html>
