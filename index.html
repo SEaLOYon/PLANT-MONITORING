@@ -262,6 +262,9 @@
     <button class="tab-btn" onclick="switchTab('purchase')" id="tab-purchase">
       <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Purchase
     </button>
+    <button class="tab-btn" onclick="switchTab('boiler')" id="tab-boiler">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16v6a8 8 0 0 1-16 0V4z"/><line x1="12" y1="14" x2="12" y2="20"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="9" y1="4" x2="9" y2="2"/><line x1="12" y1="4" x2="12" y2="2"/><line x1="15" y1="4" x2="15" y2="2"/></svg>Boiler
+    </button>
   </div>
 </div>
 
@@ -559,6 +562,107 @@
 </div>
 </div>
 
+<!-- TAB 6: BOILER MONITORING -->
+<div class="tab-panel" id="panel-boiler">
+<div class="container">
+<form id="boilerForm">
+  <div class="card">
+    <div class="card-title">Identification</div>
+    <div class="field">
+      <label>Plant <span class="required">*</span></label>
+      <select id="boiler-plant" required>
+        <option value="" disabled selected>Select plant...</option>
+        <option value="HOREB">HOREB</option>
+        <option value="ARGAO">ARGAO</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Technician Name</label>
+      <div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="boiler-tech-val">—</span><span class="id-locked-sub">signed in</span></div>
+      <input type="hidden" id="boiler-tech" />
+    </div>
+    <div class="row-2">
+      <div class="field">
+        <label>Shift</label>
+        <div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="boiler-shift-val">—</span><span class="id-locked-sub">assigned</span></div>
+        <input type="hidden" id="boiler-shift" />
+      </div>
+      <div class="field">
+        <label>Date &amp; Time</label>
+        <div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Boiler Readings</div>
+    <div class="row-2">
+      <div class="field">
+        <label>Steam Pressure (psi)</label>
+        <input type="number" name="boiler_pressure" placeholder="0.0" step="0.1" inputmode="decimal" />
+      </div>
+      <div class="field">
+        <label>Steam Temperature (°C)</label>
+        <input type="number" name="boiler_temp" placeholder="0.0" step="0.1" inputmode="decimal" />
+      </div>
+    </div>
+    <div class="row-2">
+      <div class="field">
+        <label>Water Level (%)</label>
+        <input type="number" name="boiler_water_level" placeholder="0" step="1" min="0" max="100" inputmode="decimal" />
+      </div>
+      <div class="field">
+        <label>Flue Gas Temp (°C)</label>
+        <input type="number" name="boiler_flue_temp" placeholder="0.0" step="0.1" inputmode="decimal" />
+      </div>
+    </div>
+    <div class="row-2">
+      <div class="field">
+        <label>Feed Water Temp (°C)</label>
+        <input type="number" name="boiler_fw_temp" placeholder="0.0" step="0.1" inputmode="decimal" />
+      </div>
+      <div class="field">
+        <label>Fuel Consumption (L/hr)</label>
+        <input type="number" name="boiler_fuel_rate" placeholder="0.0" step="0.1" inputmode="decimal" />
+      </div>
+    </div>
+    <div class="row-2">
+      <div class="field">
+        <label>O² Content (%)</label>
+        <input type="number" name="boiler_o2" placeholder="0.0" step="0.1" inputmode="decimal" />
+      </div>
+      <div class="field">
+        <label>CO² Content (%)</label>
+        <input type="number" name="boiler_co2" placeholder="0.0" step="0.1" inputmode="decimal" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Boiler Status</div>
+    <div class="field">
+      <label>Overall Status</label>
+      <div class="status-row">
+        <div class="status-btn ok" data-val="Normal" onclick="setBoilerStatus(this)">✓ Normal</div>
+        <div class="status-btn" data-val="Warning" onclick="setBoilerStatus(this)">⚠ Warning</div>
+        <div class="status-btn" data-val="Critical" onclick="setBoilerStatus(this)">✕ Critical</div>
+      </div>
+      <input type="hidden" id="boiler-status" value="Normal" />
+    </div>
+    <div class="field">
+      <label>Remarks / Observations</label>
+      <textarea name="boiler_remarks" placeholder="Note any abnormal readings, unusual sounds, leaks, safety valve status..."></textarea>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn" id="boilerSubmitBtn">
+    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    SUBMIT BOILER REPORT
+  </button>
+</form>
+</div>
+</div><!-- /panel-boiler -->
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -568,7 +672,7 @@
   const SEND_SVG = '<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
 
   /* ── TABS ── */
-  const PANELS = ['electrical','vibration','fuel','chemical','purchase'];
+  const PANELS = ['electrical','vibration','fuel','chemical','purchase','boiler'];
   function switchTab(id) {
     PANELS.forEach(function(p) {
       document.getElementById('panel-'+p).classList.toggle('active', p===id);
@@ -633,7 +737,7 @@
 
   function loginSuccess(user){
     currentUser=user;
-    var PREFIXES=['elec','vib','fuel','chem','pr'];
+    var PREFIXES=['elec','vib','fuel','chem','pr','boiler'];
     PREFIXES.forEach(function(prefix){
       var techEl=document.getElementById(prefix+'-tech');
       var techVal=document.getElementById(prefix+'-tech-val');
@@ -692,7 +796,64 @@
     devCount++;
     var id=devCount, wrap=document.createElement('div');
     wrap.className='device-card'; wrap.id='dc-'+id;
-    wrap.innerHTML='<div class="device-card-header"><div class="device-num">Device '+id+'</div><button type="button" class="del-btn" onclick="removeDevice('+id+')" '+(id===1?'disabled':'')+'><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div>'+'<div class="device-card-body">'+'<div class="field"><label>Device</label><input type="text" name="d_device_'+id+'" placeholder="e.g. Breaker 1" /></div>'+'<div class="field"><label>Location</label><input type="text" name="d_location_'+id+'" placeholder="e.g. Hammer Mill" /></div>'+'<div class="reading-group"><div class="reading-group-title">Voltage (V)</div><div class="readings-3"><div class="reading-cell"><div class="rc-label">V<sub>AB</sub></div><input type="number" name="d_vAB_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Volts</div></div><div class="reading-cell"><div class="rc-label">V<sub>BC</sub></div><input type="number" name="d_vBC_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Volts</div></div><div class="reading-cell"><div class="rc-label">V<sub>CA</sub></div><input type="number" name="d_vCA_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Volts</div></div></div></div>'+'<div class="reading-group"><div class="reading-group-title">Current (A)</div><div class="readings-3"><div class="reading-cell"><div class="rc-label">I<sub>A</sub></div><input type="number" name="d_iA_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Amps</div></div><div class="reading-cell"><div class="rc-label">I<sub>B</sub></div><input type="number" name="d_iB_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Amps</div></div><div class="reading-cell"><div class="rc-label">I<sub>C</sub></div><input type="number" name="d_iC_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Amps</div></div></div></div>'+'<div class="field"><label>Status</label><div class="status-row"><div class="status-btn ok" data-id="'+id+'" data-val="Normal" onclick="setStatus(this)">✓ Normal</div><div class="status-btn" data-id="'+id+'" data-val="Warning" onclick="setStatus(this)">⚠ Warning</div><div class="status-btn" data-id="'+id+'" data-val="Critical" onclick="setStatus(this)">✕ Critical</div></div><input type="hidden" name="d_status_'+id+'" value="Normal" /></div>'+'<div class="field"><label>Remarks</label><textarea name="d_remarks_'+id+'" placeholder="Observations..."></textarea></div>'+'</div>';
+    wrap.innerHTML=
+      '<div class="device-card-header">'+
+        '<div class="device-num">Device '+id+'</div>'+
+        '<button type="button" class="del-btn" onclick="removeDevice('+id+')" '+(id===1?'disabled':'')+'>'+
+          '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>'+
+        '</button>'+
+      '</div>'+
+      '<div class="device-card-body">'+
+        '<div class="row-2">'+
+          '<div class="field"><label>Device Type</label>'+
+            '<select name="d_type_'+id+'">'+
+              '<option value="">Select type...</option>'+
+              '<option value="Breaker">Breaker</option>'+
+              '<option value="Soft Starter">Soft Starter</option>'+
+              '<option value="Contactor">Contactor</option>'+
+              '<option value="Auxiliaries">Auxiliaries</option>'+
+              '<option value="Motor">Motor</option>'+
+            '</select>'+
+          '</div>'+
+          '<div class="field"><label>Device Name / Tag</label>'+
+            '<input type="text" name="d_device_'+id+'" placeholder="e.g. Breaker 1" />'+
+          '</div>'+
+        '</div>'+
+        '<div class="field"><label>Location</label>'+
+          '<input type="text" name="d_location_'+id+'" placeholder="e.g. Hammer Mill" />'+
+        '</div>'+
+        '<div class="field"><label>Photo Reference <span style="font-size:.65rem;color:var(--muted);">(optional)</span></label>'+
+          '<input type="file" name="d_photo_'+id+'" id="d_photo_'+id+'" accept="image/*" capture="environment" style="width:100%;padding:.55rem .9rem;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:.82rem;cursor:pointer;" onchange="previewPhoto(this,'+id+')" />'+
+          '<div id="d_preview_'+id+'" style="margin-top:.4rem;display:none;"><img style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:180px;object-fit:cover;" /></div>'+
+        '</div>'+
+        '<div class="reading-group">'+
+          '<div class="reading-group-title">Voltage (V)</div>'+
+          '<div class="readings-3">'+
+            '<div class="reading-cell"><div class="rc-label">V<sub>AB</sub></div><input type="number" name="d_vAB_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Volts</div></div>'+
+            '<div class="reading-cell"><div class="rc-label">V<sub>BC</sub></div><input type="number" name="d_vBC_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Volts</div></div>'+
+            '<div class="reading-cell"><div class="rc-label">V<sub>CA</sub></div><input type="number" name="d_vCA_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Volts</div></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="reading-group">'+
+          '<div class="reading-group-title">Current (A)</div>'+
+          '<div class="readings-3">'+
+            '<div class="reading-cell"><div class="rc-label">I<sub>A</sub></div><input type="number" name="d_iA_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Amps</div></div>'+
+            '<div class="reading-cell"><div class="rc-label">I<sub>B</sub></div><input type="number" name="d_iB_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Amps</div></div>'+
+            '<div class="reading-cell"><div class="rc-label">I<sub>C</sub></div><input type="number" name="d_iC_'+id+'" placeholder="0.0" step="any" inputmode="decimal" /><div class="rc-unit">Amps</div></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="field"><label>Status</label>'+
+          '<div class="status-row">'+
+            '<div class="status-btn ok" data-id="'+id+'" data-val="Normal" onclick="setStatus(this)">✓ Normal</div>'+
+            '<div class="status-btn" data-id="'+id+'" data-val="Warning" onclick="setStatus(this)">⚠ Warning</div>'+
+            '<div class="status-btn" data-id="'+id+'" data-val="Critical" onclick="setStatus(this)">✕ Critical</div>'+
+          '</div>'+
+          '<input type="hidden" name="d_status_'+id+'" value="Normal" />'+
+        '</div>'+
+        '<div class="field"><label>Remarks</label>'+
+          '<textarea name="d_remarks_'+id+'" placeholder="Observations..."></textarea>'+
+        '</div>'+
+      '</div>';
     document.getElementById('deviceList').appendChild(wrap);
     updateDel(); wrap.scrollIntoView({behavior:'smooth',block:'start'});
   }
@@ -700,6 +861,17 @@
   function renumberDev(){document.querySelectorAll('#deviceList .device-card').forEach(function(c,i){c.querySelector('.device-num').textContent='Device '+(i+1);});}
   function updateDel(){var cards=document.querySelectorAll('#deviceList .device-card');cards.forEach(function(c){c.querySelector('.del-btn').disabled=cards.length===1;});}
   function setStatus(el){var id=el.dataset.id;el.closest('.device-card-body').querySelectorAll('.status-btn').forEach(function(b){b.className='status-btn';});var v=el.dataset.val;el.classList.add(v==='Normal'?'ok':v==='Warning'?'wrn':'crit');el.closest('.device-card-body').querySelector('[name="d_status_'+id+'"]').value=v;}
+
+  function previewPhoto(input, id) {
+    var preview = document.getElementById('d_preview_'+id);
+    var img = preview.querySelector('img');
+    if(input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) { img.src = e.target.result; preview.style.display='block'; };
+      reader.readAsDataURL(input.files[0]);
+    } else { preview.style.display='none'; }
+  }
+
   addDevice();
 
   document.getElementById('electricalForm').addEventListener('submit',function(e){
@@ -709,7 +881,8 @@
     var now=new Date(), devices=[];
     document.querySelectorAll('#deviceList .device-card').forEach(function(card){
       function g(n){var el=card.querySelector('[name^="d_'+n+'_"]');return el?el.value:'';}
-      devices.push({device:g('device'),location:g('location'),vAB:g('vAB'),vBC:g('vBC'),vCA:g('vCA'),iA:g('iA'),iB:g('iB'),iC:g('iC'),status:g('status'),remarks:g('remarks')});
+      var photoInput=card.querySelector('[name^="d_photo_"]');
+      devices.push({type:g('type'),device:g('device'),location:g('location'),vAB:g('vAB'),vBC:g('vBC'),vCA:g('vCA'),iA:g('iA'),iB:g('iB'),iC:g('iC'),status:g('status'),remarks:g('remarks'),hasPhoto:(photoInput&&photoInput.files&&photoInput.files.length>0)?'YES':'NO'});
     });
     var params={type:'electrical',timestamp:now.toISOString(),date:now.toLocaleDateString('en-PH'),time:now.toLocaleTimeString('en-PH'),plant:document.getElementById('elec-plant').value,technician:document.getElementById('elec-tech').value,shift:document.getElementById('elec-shift').value,devices:devices};
     submitViaJSONP(params,function(){showToast('Line report submitted!');document.getElementById('electricalForm').reset();document.getElementById('deviceList').innerHTML='';devCount=0;addDevice();window.scrollTo({top:0,behavior:'smooth'});btn.disabled=false;btn.innerHTML=SEND_SVG+' SUBMIT LINE REPORT';},function(){showToast('Failed. Check connection.',true);btn.disabled=false;btn.innerHTML=SEND_SVG+' SUBMIT LINE REPORT';});
@@ -775,6 +948,40 @@
     document.querySelectorAll('#prItemList .device-card').forEach(function(card){items.push({item:card.querySelector('[name^="pr_item_"]')?card.querySelector('[name^="pr_item_"]').value:'',specs:card.querySelector('[name^="pr_specs_"]')?card.querySelector('[name^="pr_specs_"]').value:'',qty:card.querySelector('[name^="pr_qty_"]')?card.querySelector('[name^="pr_qty_"]').value:'',unit:card.querySelector('[name^="pr_unit_"]')?card.querySelector('[name^="pr_unit_"]').value:'',reason:card.querySelector('[name^="pr_reason_"]')?card.querySelector('[name^="pr_reason_"]').value:''});});
     var params={type:'purchase',timestamp:now.toISOString(),date:now.toLocaleDateString('en-PH'),time:now.toLocaleTimeString('en-PH'),plant:document.getElementById('pr-plant').value,technician:document.getElementById('pr-tech').value,priority:g('pr_priority'),items:JSON.stringify(items)};
     submitViaJSONP(params,function(){showToast('Purchase request submitted!');document.getElementById('purchaseForm').reset();document.getElementById('prItemList').innerHTML='';prCount=0;addPRItem();window.scrollTo({top:0,behavior:'smooth'});btn.disabled=false;btn.innerHTML=SEND_SVG+' SUBMIT PURCHASE REQUEST';},function(){showToast('Failed. Check connection.',true);btn.disabled=false;btn.innerHTML=SEND_SVG+' SUBMIT PURCHASE REQUEST';});
+  });
+
+
+  /* ── BOILER ── */
+  function setBoilerStatus(el){
+    el.closest('.status-row').querySelectorAll('.status-btn').forEach(function(b){b.className='status-btn';});
+    var v=el.dataset.val;
+    el.classList.add(v==='Normal'?'ok':v==='Warning'?'wrn':'crit');
+    document.getElementById('boiler-status').value=v;
+  }
+
+  document.getElementById('boilerForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var btn=document.getElementById('boilerSubmitBtn');
+    btn.disabled=true; btn.innerHTML=SPIN_SVG+' Submitting...';
+    var now=new Date(), form=document.getElementById('boilerForm');
+    function g(n){var el=form.querySelector('[name="'+n+'"]');return el?el.value:'';}
+    var params={
+      type:'boiler',
+      timestamp:now.toISOString(), date:now.toLocaleDateString('en-PH'), time:now.toLocaleTimeString('en-PH'),
+      plant:document.getElementById('boiler-plant').value,
+      technician:document.getElementById('boiler-tech').value,
+      shift:document.getElementById('boiler-shift').value,
+      pressure:g('boiler_pressure'), temperature:g('boiler_temp'),
+      waterLevel:g('boiler_water_level'), flueTemp:g('boiler_flue_temp'),
+      feedWaterTemp:g('boiler_fw_temp'), fuelRate:g('boiler_fuel_rate'),
+      o2:g('boiler_o2'), co2:g('boiler_co2'),
+      status:document.getElementById('boiler-status').value,
+      remarks:g('boiler_remarks'),
+    };
+    submitViaJSONP(params,
+      function(){showToast('Boiler report submitted!');form.reset();document.getElementById('boiler-status').value='Normal';form.querySelectorAll('.status-btn').forEach(function(b){b.className='status-btn';});form.querySelector('.status-btn').classList.add('ok');window.scrollTo({top:0,behavior:'smooth'});btn.disabled=false;btn.innerHTML=SEND_SVG+' SUBMIT BOILER REPORT';},
+      function(){showToast('Failed. Check connection.',true);btn.disabled=false;btn.innerHTML=SEND_SVG+' SUBMIT BOILER REPORT';}
+    );
   });
 
 </script>
