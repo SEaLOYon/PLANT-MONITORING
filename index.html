@@ -184,7 +184,7 @@
   .login-field input { width:100%; height:var(--input-h); background:var(--surface2); border:1px solid var(--border); border-radius:9px; padding:0 .9rem; color:var(--text); font-family:'DM Sans',sans-serif; font-size:.95rem; outline:none; transition:border-color .2s; -webkit-appearance:none; }
   .login-field input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(59,130,246,.15); }
   .login-field input::placeholder { color:#3d4f6e; }
-  .login-btn { width:100%; padding:.95rem; background:var(--accent); border:none; border-radius:10px; color:#fff; font-family:'Rajdhani',sans-serif; font-size:1.05rem; font-weight:700; letter-spacing:.1em; cursor:pointer; margin-top:.3rem; display:flex; align-items:center; justify-content:center; gap:8px; transition:all .2s; -webkit-tap-highlight-color:transparent; }
+  .login-btn { width:100%; height:52px; padding:0 1rem; background:var(--accent); border:none; border-radius:10px; color:#fff; font-family:'Rajdhani',sans-serif; font-size:1.05rem; font-weight:700; letter-spacing:.1em; cursor:pointer; margin-top:.3rem; display:flex; align-items:center; justify-content:center; gap:8px; transition:all .2s; -webkit-tap-highlight-color:transparent; flex-shrink:0; }
   .login-btn:active { transform:scale(.98); }
   .login-btn:disabled { background:#2a3a55; color:var(--muted); cursor:not-allowed; }
   .login-error { margin-top:.75rem; padding:.6rem .9rem; border-radius:8px; background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.3); color:var(--danger); font-size:.78rem; text-align:center; display:none; }
@@ -200,6 +200,37 @@
   .coming-soon-icon svg { width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:1.8; }
   .coming-soon h3 { font-family:'Rajdhani',sans-serif; font-size:1rem; font-weight:700; letter-spacing:.1em; color:var(--text); text-transform:uppercase; margin-bottom:.35rem; }
   .coming-soon p { font-size:.8rem; }
+
+
+  /* ── BOILER TABLE ── */
+  .boiler-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:10px; border:1px solid var(--border); margin-bottom:.5rem; }
+  .boiler-table { width:100%; border-collapse:collapse; min-width:480px; }
+  .boiler-table thead tr { background:var(--surface2); }
+  .boiler-table th { font-family:'Rajdhani',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--accent2); padding:.65rem .6rem; text-align:center; border-bottom:1px solid var(--border); border-right:1px solid var(--border); white-space:nowrap; }
+  .boiler-table th.col-param { text-align:left; min-width:140px; }
+  .boiler-table th.col-unit { min-width:60px; }
+  .boiler-table th.col-limit { min-width:70px; }
+  .boiler-table th.col-reading { min-width:80px; }
+  .boiler-table th.col-remark { min-width:130px; text-align:left; }
+  .boiler-table th:last-child { border-right:none; }
+  .boiler-table tbody tr { border-bottom:1px solid rgba(99,180,255,.07); }
+  .boiler-table tbody tr:last-child { border-bottom:none; }
+  .boiler-table tbody tr:nth-child(odd) { background:rgba(26,35,56,.6); }
+  .boiler-table tbody tr:nth-child(even) { background:rgba(19,25,41,.6); }
+  .boiler-table td { padding:.35rem .45rem; border-right:1px solid rgba(99,180,255,.07); vertical-align:middle; }
+  .boiler-table td:last-child { border-right:none; }
+  .boiler-param-name { font-size:.8rem; color:var(--text); padding-left:.2rem; font-weight:500; }
+  .boiler-unit-badge { font-family:'Rajdhani',sans-serif; font-size:.72rem; font-weight:700; color:var(--muted); text-align:center; }
+  .boiler-limit-badge { font-family:'Rajdhani',sans-serif; font-size:.72rem; font-weight:600; color:var(--warn); text-align:center; }
+  .boiler-input-wrap { display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .boiler-input-wrap input[type="number"] { height:34px; font-size:.92rem; border-radius:7px; min-width:68px; padding:0 .3rem; }
+  .boiler-remark-input { width:100%; height:32px; background:var(--surface2); border:1px solid var(--border); border-radius:7px; padding:0 .5rem; color:var(--text); font-family:'DM Sans',sans-serif; font-size:.75rem; outline:none; }
+  .boiler-remark-input:focus { border-color:var(--accent); }
+  .boiler-remark-input::placeholder { color:#3d4f6e; }
+  .boiler-status-dot { width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px; }
+  .boiler-row-ok .boiler-param-name { }
+  .boiler-row-warn td { background:rgba(245,158,11,.07) !important; }
+  .boiler-row-crit td { background:rgba(239,68,68,.08) !important; }
 
   @keyframes spin { to { transform:rotate(360deg); } }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
@@ -222,7 +253,7 @@
       <input type="password" id="loginPass" placeholder="Enter your password..." autocomplete="current-password" />
     </div>
     <button class="login-btn" id="loginBtn" onclick="doLogin()">
-      <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.2;flex-shrink:0;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
       SIGN IN
     </button>
     <div class="login-error" id="loginError">Incorrect username or password.</div>
@@ -259,11 +290,11 @@
     <button class="tab-btn" onclick="switchTab('chemical')" id="tab-chemical">
       <svg viewBox="0 0 24 24"><path d="M9 3h6v10l4 8H5l4-8V3z"/><line x1="9" y1="7" x2="15" y2="7"/></svg>Chem &amp; Softener
     </button>
-    <button class="tab-btn" onclick="switchTab('purchase')" id="tab-purchase">
-      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Purchase
-    </button>
     <button class="tab-btn" onclick="switchTab('boiler')" id="tab-boiler">
       <svg viewBox="0 0 24 24"><path d="M4 4h16v6a8 8 0 0 1-16 0V4z"/><line x1="12" y1="14" x2="12" y2="20"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="9" y1="4" x2="9" y2="2"/><line x1="12" y1="4" x2="12" y2="2"/><line x1="15" y1="4" x2="15" y2="2"/></svg>Boiler
+    </button>
+    <button class="tab-btn" onclick="switchTab('purchase')" id="tab-purchase">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Purchase
     </button>
   </div>
 </div>
@@ -379,6 +410,15 @@
     </div>
     <div class="field"><label>Remarks / Observations</label><textarea name="vib_remarks" placeholder="Note any abnormal readings, unusual noise, heat, etc..."></textarea></div>
   </div>
+
+  <div class="card">
+    <div class="card-title">Photo Reference</div>
+    <div class="field">
+      <label>Attach Photo <span style="font-size:.65rem;color:var(--muted);">(optional)</span></label>
+      <input type="file" id="vibForm_photo" accept="image/*" capture="environment" style="width:100%;padding:.55rem .9rem;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:.82rem;cursor:pointer;" onchange="previewFormPhoto(this,'vibForm_preview')" />
+      <div id="vibForm_preview" style="margin-top:.4rem;display:none;"><img style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:180px;object-fit:cover;" /></div>
+    </div>
+  </div>
   <button type="submit" class="submit-btn" id="vibSubmitBtn">
     <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SUBMIT VIBRATION REPORT
   </button>
@@ -430,6 +470,15 @@
     <div class="field">
       <label>Remarks</label>
       <textarea name="fuel_remarks" placeholder="Fuel condition, leaks, abnormal observations..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Photo Reference</div>
+    <div class="field">
+      <label>Attach Photo <span style="font-size:.65rem;color:var(--muted);">(optional)</span></label>
+      <input type="file" id="fuelForm_photo" accept="image/*" capture="environment" style="width:100%;padding:.55rem .9rem;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:.82rem;cursor:pointer;" onchange="previewFormPhoto(this,'fuelForm_preview')" />
+      <div id="fuelForm_preview" style="margin-top:.4rem;display:none;"><img style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:180px;object-fit:cover;" /></div>
     </div>
   </div>
   <button type="submit" class="submit-btn" id="fuelSubmitBtn">
@@ -510,6 +559,15 @@
     </div>
     <div class="field" style="margin-top:.65rem;margin-bottom:0;"><label>Replenishment Remarks</label><textarea name="chem_replenish_remarks" placeholder="Batch no., supplier, condition of chemical, etc..."></textarea></div>
   </div>
+
+  <div class="card">
+    <div class="card-title">Photo Reference</div>
+    <div class="field">
+      <label>Attach Photo <span style="font-size:.65rem;color:var(--muted);">(optional)</span></label>
+      <input type="file" id="chemForm_photo" accept="image/*" capture="environment" style="width:100%;padding:.55rem .9rem;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:.82rem;cursor:pointer;" onchange="previewFormPhoto(this,'chemForm_preview')" />
+      <div id="chemForm_preview" style="margin-top:.4rem;display:none;"><img style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:180px;object-fit:cover;" /></div>
+    </div>
+  </div>
   <button type="submit" class="submit-btn" id="chemSubmitBtn">
     <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SUBMIT CHEMICAL REPORT
   </button>
@@ -555,6 +613,15 @@
   <button type="button" class="add-device-btn" onclick="addPRItem()" style="margin-bottom:.9rem;">
     <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Item
   </button>
+
+  <div class="card">
+    <div class="card-title">Photo Reference</div>
+    <div class="field">
+      <label>Attach Photo <span style="font-size:.65rem;color:var(--muted);">(optional)</span></label>
+      <input type="file" id="prForm_photo" accept="image/*" capture="environment" style="width:100%;padding:.55rem .9rem;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:.82rem;cursor:pointer;" onchange="previewFormPhoto(this,'prForm_preview')" />
+      <div id="prForm_preview" style="margin-top:.4rem;display:none;"><img style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:180px;object-fit:cover;" /></div>
+    </div>
+  </div>
   <button type="submit" class="submit-btn" id="prSubmitBtn">
     <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SUBMIT PURCHASE REQUEST
   </button>
@@ -562,7 +629,7 @@
 </div>
 </div>
 
-<!-- TAB 6: BOILER MONITORING -->
+<!-- TAB: BOILER MONITORING -->
 <div class="tab-panel" id="panel-boiler">
 <div class="container">
 <form id="boilerForm">
@@ -595,53 +662,29 @@
   </div>
 
   <div class="card">
-    <div class="card-title">Boiler Readings</div>
-    <div class="row-2">
-      <div class="field">
-        <label>Steam Pressure (psi)</label>
-        <input type="number" name="boiler_pressure" placeholder="0.0" step="0.1" inputmode="decimal" />
-      </div>
-      <div class="field">
-        <label>Steam Temperature (°C)</label>
-        <input type="number" name="boiler_temp" placeholder="0.0" step="0.1" inputmode="decimal" />
-      </div>
-    </div>
-    <div class="row-2">
-      <div class="field">
-        <label>Water Level (%)</label>
-        <input type="number" name="boiler_water_level" placeholder="0" step="1" min="0" max="100" inputmode="decimal" />
-      </div>
-      <div class="field">
-        <label>Flue Gas Temp (°C)</label>
-        <input type="number" name="boiler_flue_temp" placeholder="0.0" step="0.1" inputmode="decimal" />
-      </div>
-    </div>
-    <div class="row-2">
-      <div class="field">
-        <label>Feed Water Temp (°C)</label>
-        <input type="number" name="boiler_fw_temp" placeholder="0.0" step="0.1" inputmode="decimal" />
-      </div>
-      <div class="field">
-        <label>Fuel Consumption (L/hr)</label>
-        <input type="number" name="boiler_fuel_rate" placeholder="0.0" step="0.1" inputmode="decimal" />
-      </div>
-    </div>
-    <div class="row-2">
-      <div class="field">
-        <label>O² Content (%)</label>
-        <input type="number" name="boiler_o2" placeholder="0.0" step="0.1" inputmode="decimal" />
-      </div>
-      <div class="field">
-        <label>CO² Content (%)</label>
-        <input type="number" name="boiler_co2" placeholder="0.0" step="0.1" inputmode="decimal" />
-      </div>
+    <div class="card-title">Boiler Parameters</div>
+    <div class="boiler-table-wrap">
+      <table class="boiler-table" id="boilerTable">
+        <thead>
+          <tr>
+            <th class="col-param">Parameter</th>
+            <th class="col-unit">Unit</th>
+            <th class="col-limit">Limit</th>
+            <th class="col-reading">Reading</th>
+            <th class="col-remark">Remarks</th>
+          </tr>
+        </thead>
+        <tbody id="boilerTbody">
+          <!-- rows injected by JS from boilerParams -->
+        </tbody>
+      </table>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">Boiler Status</div>
+    <div class="card-title">Overall Status</div>
     <div class="field">
-      <label>Overall Status</label>
+      <label>Boiler Status</label>
       <div class="status-row">
         <div class="status-btn ok" data-val="Normal" onclick="setBoilerStatus(this)">✓ Normal</div>
         <div class="status-btn" data-val="Warning" onclick="setBoilerStatus(this)">⚠ Warning</div>
@@ -650,8 +693,19 @@
       <input type="hidden" id="boiler-status" value="Normal" />
     </div>
     <div class="field">
-      <label>Remarks / Observations</label>
+      <label>General Remarks</label>
       <textarea name="boiler_remarks" placeholder="Note any abnormal readings, unusual sounds, leaks, safety valve status..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Photo Reference</div>
+    <div class="field">
+      <label>Attach Photo <span style="font-size:.65rem;color:var(--muted);">(optional)</span></label>
+      <input type="file" id="boilerForm_photo" accept="image/*" capture="environment"
+        style="width:100%;padding:.55rem .9rem;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:.82rem;cursor:pointer;"
+        onchange="previewFormPhoto(this,'boilerForm_preview')" />
+      <div id="boilerForm_preview" style="margin-top:.4rem;display:none;"><img style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:180px;object-fit:cover;" /></div>
     </div>
   </div>
 
@@ -672,7 +726,7 @@
   const SEND_SVG = '<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
 
   /* ── TABS ── */
-  const PANELS = ['electrical','vibration','fuel','chemical','purchase','boiler'];
+  const PANELS = ['electrical','vibration','fuel','chemical','boiler','purchase'];
   function switchTab(id) {
     PANELS.forEach(function(p) {
       document.getElementById('panel-'+p).classList.toggle('active', p===id);
@@ -983,6 +1037,144 @@
       function(){showToast('Failed. Check connection.',true);btn.disabled=false;btn.innerHTML=SEND_SVG+' SUBMIT BOILER REPORT';}
     );
   });
+
+
+  /* ══════════════════════════════════════
+     BOILER MONITORING
+  ══════════════════════════════════════ */
+
+  // Default params — overridden by BOILER CONFIG sheet if available
+  var BOILER_PARAMS = [
+    { key:'pressure',     name:'Boiler Steam Pressure', unit:'Bar',    limit:'10' },
+    { key:'steam_temp',   name:'Steam Temperature',     unit:'°C',     limit:'185' },
+    { key:'modulation',   name:'Modulation',            unit:'%',      limit:'100%' },
+    { key:'fw_tank_lvl',  name:'Feed Water Tank Level', unit:'cm',     limit:'22' },
+    { key:'fw_temp',      name:'Feed Water Temperature',unit:'°C',     limit:'90' },
+    { key:'fuel_press',   name:'Fuel Pressure',         unit:'MPA',    limit:'1.5' },
+    { key:'stack_temp',   name:'Stack Temperature',     unit:'°C',     limit:'260' },
+    { key:'blowdown',     name:'Blowdown',              unit:'',       limit:'' },
+    { key:'atomizing',    name:'Atomizing Air',         unit:'MPA',    limit:'0.5' },
+    { key:'boiler_water', name:'Boiler Water Level',    unit:'cm',     limit:'>20' },
+    { key:'tds',          name:'TDS Reading',           unit:'ppm',    limit:'≥3500' },
+    { key:'conductivity', name:'Conductivity Reading',  unit:'µS/cm',  limit:'≥6000' },
+    { key:'ph',           name:'pH Level',              unit:'',       limit:'10.5-11.5' },
+  ];
+
+  function buildBoilerTable() {
+    var tbody = document.getElementById('boilerTbody');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+    BOILER_PARAMS.forEach(function(p) {
+      var tr = document.createElement('tr');
+      tr.id = 'boiler-row-' + p.key;
+      tr.innerHTML =
+        '<td><div class="boiler-param-name">'+p.name+'</div></td>'+
+        '<td><div class="boiler-unit-badge" id="bu-'+p.key+'">'+p.unit+'</div></td>'+
+        '<td><div class="boiler-limit-badge" id="bl-'+p.key+'">'+p.limit+'</div></td>'+
+        '<td><div class="boiler-input-wrap">'+
+          '<input type="number" id="br-'+p.key+'" name="br_'+p.key+'" placeholder="0" step="0.01" inputmode="decimal" onchange="checkBoilerLimit(''+p.key+'')"/>'+
+        '</div></td>'+
+        '<td><input class="boiler-remark-input" type="text" name="brr_'+p.key+'" placeholder="remarks..." /></td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function checkBoilerLimit(key) {
+    // Visual warning if reading exists — actual limit check can be added later
+    var row = document.getElementById('boiler-row-'+key);
+    var val = document.getElementById('br-'+key);
+    if(row && val && val.value !== '') {
+      row.style.background = '';  // reset
+    }
+  }
+
+  // Load boiler config from GAS (plant-specific units/limits)
+  function loadBoilerConfig(plant) {
+    if(!plant) return;
+    var cbName = 'boilerCfg_'+Date.now(), s = document.createElement('script');
+    var timer = setTimeout(function(){ delete window[cbName]; if(s.parentNode)s.parentNode.removeChild(s); }, 6000);
+    s.onerror = function(){ clearTimeout(timer); delete window[cbName]; if(s.parentNode)s.parentNode.removeChild(s); };
+    window[cbName] = function(res) {
+      clearTimeout(timer); delete window[cbName]; if(s.parentNode)s.parentNode.removeChild(s);
+      if(res && res.result === 'success' && res.params) {
+        res.params.forEach(function(p) {
+          var uEl = document.getElementById('bu-'+p.key);
+          var lEl = document.getElementById('bl-'+p.key);
+          if(uEl && p.unit !== undefined) uEl.textContent = p.unit;
+          if(lEl && p.limit !== undefined) lEl.textContent = p.limit;
+        });
+      }
+    };
+    s.src = SCRIPT_URL + '?action=getBoilerConfig&plant='+encodeURIComponent(plant)+'&callback='+cbName;
+    document.head.appendChild(s);
+  }
+
+  buildBoilerTable();
+
+  // Reload config when plant changes
+  document.getElementById('boiler-plant').addEventListener('change', function(){
+    loadBoilerConfig(this.value);
+  });
+
+  function setBoilerStatus(el){
+    el.closest('.status-row').querySelectorAll('.status-btn').forEach(function(b){b.className='status-btn';});
+    var v=el.dataset.val;
+    el.classList.add(v==='Normal'?'ok':v==='Warning'?'wrn':'crit');
+    document.getElementById('boiler-status').value=v;
+  }
+
+  document.getElementById('boilerForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = document.getElementById('boilerSubmitBtn');
+    btn.disabled=true; btn.innerHTML=SPIN_SVG+' Submitting...';
+    var now=new Date(), form=document.getElementById('boilerForm');
+    function g(n){var el=form.querySelector('[name="'+n+'"]');return el?el.value:'';}
+    var readings={}, remarks={};
+    BOILER_PARAMS.forEach(function(p){
+      readings[p.key] = document.getElementById('br-'+p.key) ? document.getElementById('br-'+p.key).value : '';
+      var rEl = form.querySelector('[name="brr_'+p.key+'"]');
+      remarks[p.key] = rEl ? rEl.value : '';
+    });
+    var params={
+      type:'boiler',
+      timestamp:now.toISOString(), date:now.toLocaleDateString('en-PH'), time:now.toLocaleTimeString('en-PH'),
+      plant:document.getElementById('boiler-plant').value,
+      technician:document.getElementById('boiler-tech').value,
+      shift:document.getElementById('boiler-shift').value,
+      readings:JSON.stringify(readings),
+      remarks_per_param:JSON.stringify(remarks),
+      status:document.getElementById('boiler-status').value,
+      general_remarks:g('boiler_remarks'),
+    };
+    submitViaJSONP(params,
+      function(){
+        showToast('Boiler report submitted!');
+        form.reset();
+        BOILER_PARAMS.forEach(function(p){
+          var rEl=document.getElementById('br-'+p.key); if(rEl) rEl.value='';
+          var rrEl=form.querySelector('[name="brr_'+p.key+'"]'); if(rrEl) rrEl.value='';
+        });
+        document.getElementById('boiler-status').value='Normal';
+        form.querySelectorAll('.status-btn').forEach(function(b){b.className='status-btn';});
+        form.querySelector('.status-btn').classList.add('ok');
+        window.scrollTo({top:0,behavior:'smooth'});
+        btn.disabled=false; btn.innerHTML=SEND_SVG+' SUBMIT BOILER REPORT';
+      },
+      function(){showToast('Failed. Check connection.',true);btn.disabled=false;btn.innerHTML=SEND_SVG+' SUBMIT BOILER REPORT';}
+    );
+  });
+
+  /* ── PHOTO PREVIEW (all forms) ── */
+  function previewFormPhoto(input, previewId) {
+    var preview = document.getElementById(previewId);
+    if(!preview) return;
+    var img = preview.querySelector('img');
+    if(input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e){ img.src=e.target.result; preview.style.display='block'; };
+      reader.readAsDataURL(input.files[0]);
+    } else { preview.style.display='none'; }
+  }
 
 </script>
 </body>
