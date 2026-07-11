@@ -157,6 +157,20 @@
   .user-badge svg { width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.2;flex-shrink:0; }
   .logout-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:.65rem; text-decoration:underline; padding:0; margin-left:4px; font-family:DM Sans,sans-serif; }
   .logout-btn:hover { color:var(--danger); }
+
+  .super-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:5px;padding:1px 7px;font-size:.62rem;font-family:Rajdhani,sans-serif;font-weight:700;color:var(--warn);letter-spacing:.06em;margin-left:6px;}
+  .super-override{display:none;margin-top:.5rem;padding:.65rem;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:9px;}
+  .super-override label{font-size:.68rem;color:var(--warn);font-weight:600;}
+  .photo-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.75rem .8rem;margin-bottom:.75rem;}
+  .photo-card-title{font-family:Rajdhani,sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:.6rem;}
+  .photo-grid{display:grid;gap:.5rem;}
+  .photo-grid.g1{grid-template-columns:1fr;}
+  .photo-grid.g2{grid-template-columns:1fr 1fr;}
+  .photo-slot label{display:block;font-size:.67rem;color:var(--muted);margin-bottom:3px;}
+  .photo-slot input[type=file]{width:100%;padding:.45rem .7rem;background:var(--surface3);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:.78rem;cursor:pointer;}
+  .photo-prev{display:none;margin-top:3px;}
+  .photo-prev img{width:100%;border-radius:7px;border:1px solid var(--border);max-height:140px;object-fit:cover;}
+
   @keyframes spin { to { transform:rotate(360deg); } }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
 </style>
@@ -203,7 +217,8 @@
     <div class="field"><label>Plant <span class="required">*</span></label><select id="elec-plant" required><option value="" disabled selected>Select plant...</option><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div>
     <div class="field"><label>Technician</label><div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="elec-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="elec-tech" /></div>
     <div class="row-2">
-      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="elec-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="elec-shift" /></div>
+      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="elec-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="elec-shift" />
+      <div class="super-override" id="elec-sovr"><div class="row-2"><div class="field"><label>★ Plant Override</label><select id="elec-po" onchange="sPl('elec',this.value)"><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div><div class="field"><label>★ Shift Override</label><select id="elec-so" onchange="sSh('elec',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select></div></div></div></div>
       <div class="field"><label>Date &amp; Time</label><div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div></div>
     </div>
   </div>
@@ -218,7 +233,8 @@
     <div class="field"><label>Plant <span class="required">*</span></label><select id="vib-plant" required><option value="" disabled selected>Select plant...</option><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div>
     <div class="field"><label>Technician</label><div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="vib-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="vib-tech" /></div>
     <div class="row-2">
-      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="vib-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="vib-shift" /></div>
+      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="vib-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="vib-shift" />
+      <div class="super-override" id="vib-sovr"><div class="row-2"><div class="field"><label>★ Plant Override</label><select id="vib-po" onchange="sPl('vib',this.value)"><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div><div class="field"><label>★ Shift Override</label><select id="vib-so" onchange="sSh('vib',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select></div></div></div></div>
       <div class="field"><label>Date &amp; Time</label><div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div></div>
     </div>
   </div>
@@ -238,6 +254,8 @@
     </tbody></table></div>
     <div class="field"><label>Remarks</label><textarea name="vib_remarks" placeholder="Note any abnormal readings..."></textarea></div>
   </div>
+
+  <div class="photo-card"><div class="photo-card-title">Photo Documentation</div><div class="photo-grid g1"><div class="photo-slot"><label>Reference Photo</label><input type="file" id="pf_vib" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_vib_p"><img/></div></div></div></div>
   <button type="submit" class="submit-btn" id="vibSubmitBtn"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SUBMIT VIBRATION REPORT</button>
 </form></div></div>
 
@@ -247,7 +265,8 @@
     <div class="field"><label>Plant <span class="required">*</span></label><select id="fuel-plant" required><option value="" disabled selected>Select plant...</option><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div>
     <div class="field"><label>Technician</label><div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="fuel-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="fuel-tech" /></div>
     <div class="row-2">
-      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="fuel-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="fuel-shift" /></div>
+      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="fuel-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="fuel-shift" />
+      <div class="super-override" id="fuel-sovr"><div class="row-2"><div class="field"><label>★ Plant Override</label><select id="fuel-po" onchange="sPl('fuel',this.value)"><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div><div class="field"><label>★ Shift Override</label><select id="fuel-so" onchange="sSh('fuel',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select></div></div></div></div>
       <div class="field"><label>Date &amp; Time</label><div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div></div>
     </div>
   </div>
@@ -256,6 +275,8 @@
     <div class="field"><label>Main Tank Reading (cm)</label><input type="number" id="fuel-main-pres" name="fuel_main_pres" placeholder="0.0" step="0.1" inputmode="decimal"/></div>
     <div class="field"><label>Remarks</label><textarea name="fuel_remarks" placeholder="Fuel condition, leaks, abnormal observations..."></textarea></div>
   </div>
+
+  <div class="photo-card"><div class="photo-card-title">Photo Documentation</div><div class="photo-grid g2"><div class="photo-slot"><label>Day Tank</label><input type="file" id="pf_fd" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_fd_p"><img/></div></div><div class="photo-slot"><label>Main Tank</label><input type="file" id="pf_fm" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_fm_p"><img/></div></div></div></div>
   <button type="submit" class="submit-btn" id="fuelSubmitBtn"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SUBMIT FUEL REPORT</button>
 </form></div></div>
 
@@ -265,7 +286,8 @@
     <div class="field"><label>Plant <span class="required">*</span></label><select id="chem-plant" required><option value="" disabled selected>Select plant...</option><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div>
     <div class="field"><label>Technician</label><div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="chem-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="chem-tech" /></div>
     <div class="row-2">
-      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="chem-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="chem-shift" /></div>
+      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="chem-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="chem-shift" />
+      <div class="super-override" id="chem-sovr"><div class="row-2"><div class="field"><label>★ Plant Override</label><select id="chem-po" onchange="sPl('chem',this.value)"><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div><div class="field"><label>★ Shift Override</label><select id="chem-so" onchange="sSh('chem',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select></div></div></div></div>
       <div class="field"><label>Date &amp; Time</label><div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div></div>
     </div>
   </div>
@@ -293,6 +315,8 @@
     </div>
     <div class="field" style="margin-top:.65rem;margin-bottom:0;"><label>Replenishment Remarks</label><textarea name="chem_replenish_remarks" placeholder="Batch no., supplier, condition of chemical, etc..."></textarea></div>
   </div>
+
+  <div class="photo-card"><div class="photo-card-title">Photo Documentation</div><div class="photo-grid g2"><div class="photo-slot"><label>Photo 1</label><input type="file" id="pf_c1" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_c1_p"><img/></div></div><div class="photo-slot"><label>Photo 2</label><input type="file" id="pf_c2" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_c2_p"><img/></div></div><div class="photo-slot"><label>Photo 3</label><input type="file" id="pf_c3" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_c3_p"><img/></div></div><div class="photo-slot"><label>Photo 4</label><input type="file" id="pf_c4" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_c4_p"><img/></div></div><div class="photo-slot"><label>Photo 5</label><input type="file" id="pf_c5" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_c5_p"><img/></div></div></div></div>
   <button type="submit" class="submit-btn" id="chemSubmitBtn"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SUBMIT CHEMICAL REPORT</button>
 </form></div></div>
 
@@ -302,7 +326,8 @@
     <div class="field"><label>Plant <span class="required">*</span></label><select id="boiler-plant" required><option value="" disabled selected>Select plant...</option><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div>
     <div class="field"><label>Technician</label><div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="boiler-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="boiler-tech" /></div>
     <div class="row-2">
-      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="boiler-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="boiler-shift" /></div>
+      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="boiler-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="boiler-shift" />
+      <div class="super-override" id="boiler-sovr"><div class="row-2"><div class="field"><label>★ Plant Override</label><select id="boiler-po" onchange="sPl('boiler',this.value)"><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div><div class="field"><label>★ Shift Override</label><select id="boiler-so" onchange="sSh('boiler',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select></div></div></div></div>
       <div class="field"><label>Date &amp; Time</label><div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div></div>
     </div>
   </div>
@@ -331,6 +356,8 @@
     </div>
     <div class="field"><label>General Remarks</label><textarea name="boiler_remarks" placeholder="Note any abnormal readings, unusual sounds, leaks, safety valve status..."></textarea></div>
   </div>
+
+  <div class="photo-card"><div class="photo-card-title">Photo Documentation</div><div class="photo-grid g2"><div class="photo-slot"><label>Photo 1</label><input type="file" id="pf_b1" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_b1_p"><img/></div></div><div class="photo-slot"><label>Photo 2</label><input type="file" id="pf_b2" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_b2_p"><img/></div></div><div class="photo-slot"><label>Photo 3</label><input type="file" id="pf_b3" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_b3_p"><img/></div></div><div class="photo-slot"><label>Photo 4</label><input type="file" id="pf_b4" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_b4_p"><img/></div></div><div class="photo-slot"><label>Photo 5</label><input type="file" id="pf_b5" accept="image/*" capture="environment"/><div class="photo-prev" id="pf_b5_p"><img/></div></div></div></div>
   <button type="submit" class="submit-btn" id="boilerSubmitBtn"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SUBMIT BOILER REPORT</button>
 </form></div></div>
 
@@ -353,7 +380,7 @@
 
 <script>
   // PMS-v3 — stable login version with all tabs
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmIadM5HDk4S9czfoqXVH4SLMVZo0anhaxbV7MQzpqz9YLnsLuSObs_8wAB9EWSwwp/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz39_zYC-0-2XDEqpDo8xTk_PJ1gQru9a1gbCs6ELxNq57PSd_Lra_mvgpyNb541AiO/exec';
   const SPIN_SVG = '<svg viewBox="0 0 24 24" style="animation:spin 1s linear infinite;width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>';
   const SEND_SVG = '<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
 
@@ -377,6 +404,22 @@
     script.src=SCRIPT_URL+'?'+qs;
     script.onerror=function(){cleanup();onError('Network error');};
     document.head.appendChild(script);
+  }
+
+
+  function prevPhoto(inp,prevId){
+    var w=document.getElementById(prevId);if(!w)return;
+    var img=w.querySelector('img');
+    if(inp.files&&inp.files[0]){var r=new FileReader();r.onload=function(e){img.src=e.target.result;w.style.display='block';};r.readAsDataURL(inp.files[0]);}
+    else w.style.display='none';
+  }
+
+  function attachPhotoListeners(){
+    var ids=['pf_vib','pf_fd','pf_fm','pf_c1','pf_c2','pf_c3','pf_c4','pf_c5','pf_b1','pf_b2','pf_b3','pf_b4','pf_b5'];
+    ids.forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.addEventListener('change',function(){prevPhoto(this,id+'_p');});
+    });
   }
 
   // LOGIN
@@ -409,7 +452,9 @@
       var plantEl=document.getElementById(prefix+'-plant');
       if(plantEl&&user.plant){for(var i=0;i<plantEl.options.length;i++){if(plantEl.options[i].value===user.plant){plantEl.selectedIndex=i;break;}}}
     });
-    document.getElementById('badgeName').textContent=user.name;
+    var isSuper=user.role==='SUPER';
+    ['elec','vib','fuel','chem','boiler','pr'].forEach(function(p){var so=document.getElementById(p+'-sovr');if(so)so.style.display=isSuper?'block':'none';});
+    document.getElementById('badgeName').innerHTML=user.name+(isSuper?'<span class="super-badge">★ SUPER</span>':'');
     document.getElementById('userBadge').style.display='flex';
     var overlay=document.getElementById('loginOverlay');
     overlay.classList.add('hiding');setTimeout(function(){overlay.classList.add('hidden');},400);
@@ -438,6 +483,42 @@
 
   // LINE MONITORING
   var devCount=0;
+  var DEV_TYPES=['Breaker','Soft Starter','Contactor','Auxiliaries','Motor'];
+  var DEV_NAMES={};
+
+  function loadDeviceConfig(){
+    var cb='dc_'+Date.now(),s=document.createElement('script');
+    var t=setTimeout(function(){delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);},6000);
+    s.onerror=function(){clearTimeout(t);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};
+    window[cb]=function(r){clearTimeout(t);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);
+      if(r&&r.result==='success'){if(r.types)DEV_TYPES=r.types;if(r.names)DEV_NAMES=r.names;}
+      refreshDeviceTypeSelects();
+    };
+    s.src=SCRIPT_URL+'?action=getDeviceConfig&callback='+cb;
+    document.head.appendChild(s);
+  }
+
+  function refreshDeviceTypeSelects(){
+    document.querySelectorAll('[name^="d_type_"]').forEach(function(sel){
+      var cur=sel.value;
+      sel.innerHTML='<option value="">Select type...</option>';
+      DEV_TYPES.forEach(function(t){var o=document.createElement('option');o.value=t;o.textContent=t;sel.appendChild(o);});
+      if(cur) sel.value=cur;
+    });
+  }
+
+  function onTypeChange(sel,id){
+    var type=sel.value;
+    var ns=document.getElementById('dns_'+id);
+    if(!ns)return;
+    var names=DEV_NAMES[type]||[];
+    ns.innerHTML='<option value="">Select device...</option>';
+    names.forEach(function(n){var o=document.createElement('option');o.value=n;o.textContent=n;ns.appendChild(o);});
+  }
+
+  function sPl(prefix,val){var el=document.getElementById(prefix+'-plant');if(el){for(var i=0;i<el.options.length;i++){if(el.options[i].value===val){el.selectedIndex=i;break;}}}}
+  function sSh(prefix,val){var el=document.getElementById(prefix+'-shift');if(el)el.value=val;var v=document.getElementById(prefix+'-shift-val');if(v)v.textContent=val+' Shift';}
+
   function addDevice(){
     devCount++;var id=devCount,wrap=document.createElement('div');
     wrap.className='device-card';wrap.id='dc-'+id;
@@ -449,7 +530,6 @@
       '<div class="row-2">'+
       '<div class="field"><label>Device Type</label><select name="d_type_'+id+'"><option value="">Select...</option><option value="Breaker">Breaker</option><option value="Soft Starter">Soft Starter</option><option value="Contactor">Contactor</option><option value="Auxiliaries">Auxiliaries</option><option value="Motor">Motor</option></select></div>'+
       '<div class="field"><label>Device Name</label><input type="text" name="d_device_'+id+'" placeholder="e.g. Breaker 1"/></div></div>'+
-      '<div class="field"><label>Location</label><input type="text" name="d_location_'+id+'" placeholder="e.g. Hammer Mill"/></div>'+
       '<div class="reading-group"><div class="reading-group-title">Voltage (V)</div><div class="readings-3">'+
       '<div class="reading-cell"><div class="rc-label">V<sub>AB</sub></div><input type="number" name="d_vAB_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Volts</div></div>'+
       '<div class="reading-cell"><div class="rc-label">V<sub>BC</sub></div><input type="number" name="d_vBC_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Volts</div></div>'+
@@ -466,6 +546,11 @@
       '<div class="field"><label>Remarks</label><textarea name="d_remarks_'+id+'" placeholder="Observations..."></textarea></div>'+
       '</div>';
     document.getElementById('deviceList').appendChild(wrap);
+    // Attach photo listeners
+    wrap.querySelectorAll('.photo-slot input[type=file]').forEach(function(inp,idx){
+      var prevId=idx===0?'pp_v_'+id:'pp_i_'+id;
+      inp.addEventListener('change',function(){prevPhoto(this,prevId);});
+    });
     updateDel();wrap.scrollIntoView({behavior:'smooth',block:'start'});
   }
   function removeDevice(id){var el=document.getElementById('dc-'+id);if(el)el.remove();updateDel();document.querySelectorAll('#deviceList .device-card').forEach(function(c,i){c.querySelector('.device-num').textContent='Device '+(i+1);});}
@@ -478,7 +563,7 @@
     var now=new Date(),devices=[];
     document.querySelectorAll('#deviceList .device-card').forEach(function(card){
       function g(n){var el=card.querySelector('[name^="d_'+n+'_"]');return el?el.value:'';}
-      devices.push({type:g('type'),device:g('device'),location:g('location'),vAB:g('vAB'),vBC:g('vBC'),vCA:g('vCA'),iA:g('iA'),iB:g('iB'),iC:g('iC'),status:g('status'),remarks:g('remarks')});
+      devices.push({type:g('type'),device:g('device'),vAB:g('vAB'),vBC:g('vBC'),vCA:g('vCA'),iA:g('iA'),iB:g('iB'),iC:g('iC'),status:g('status'),remarks:g('remarks')});
     });
     var params={type:'electrical',timestamp:now.toISOString(),date:now.toLocaleDateString('en-PH'),time:now.toLocaleTimeString('en-PH'),plant:document.getElementById('elec-plant').value,technician:document.getElementById('elec-tech').value,shift:document.getElementById('elec-shift').value,devices:devices};
     submitViaJSONP(params,function(){showToast('Line report submitted!');document.getElementById('electricalForm').reset();document.getElementById('deviceList').innerHTML='';devCount=0;addDevice();window.scrollTo({top:0,behavior:'smooth'});btn.disabled=false;btn.innerHTML=SEND_SVG+' SUBMIT LINE REPORT';},function(){showToast('Failed.',true);btn.disabled=false;btn.innerHTML=SEND_SVG+' SUBMIT LINE REPORT';});
