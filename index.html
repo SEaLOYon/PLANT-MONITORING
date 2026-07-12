@@ -380,7 +380,7 @@
 
 <script>
   // PMS-v3 — stable login version with all tabs
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz39_zYC-0-2XDEqpDo8xTk_PJ1gQru9a1gbCs6ELxNq57PSd_Lra_mvgpyNb541AiO/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQnwrqBv5Oq1XQ709-6XTvBlQV6UJ1SMnmk6XKUtMs5ugYBOGrSSoU-x9XbuEl-duB/exec';
   const SPIN_SVG = '<svg viewBox="0 0 24 24" style="animation:spin 1s linear infinite;width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>';
   const SEND_SVG = '<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
 
@@ -520,37 +520,54 @@
   function sSh(prefix,val){var el=document.getElementById(prefix+'-shift');if(el)el.value=val;var v=document.getElementById(prefix+'-shift-val');if(v)v.textContent=val+' Shift';}
 
   function addDevice(){
-    devCount++;var id=devCount,wrap=document.createElement('div');
+    devCount++;
+    var id=devCount,wrap=document.createElement('div');
     wrap.className='device-card';wrap.id='dc-'+id;
+    var typeOpts='<option value="">Select type...</option>';
+    DEV_TYPES.forEach(function(t){typeOpts+='<option value="'+t+'">'+t+'</option>';});
     wrap.innerHTML=
       '<div class="device-card-header"><div class="device-num">Device '+id+'</div>'+
       '<button type="button" class="del-btn" onclick="removeDevice('+id+')" '+(id===1?'disabled':'')+'>'+
       '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div>'+
       '<div class="device-card-body">'+
       '<div class="row-2">'+
-      '<div class="field"><label>Device Type</label><select name="d_type_'+id+'"><option value="">Select...</option><option value="Breaker">Breaker</option><option value="Soft Starter">Soft Starter</option><option value="Contactor">Contactor</option><option value="Auxiliaries">Auxiliaries</option><option value="Motor">Motor</option></select></div>'+
-      '<div class="field"><label>Device Name</label><input type="text" name="d_device_'+id+'" placeholder="e.g. Breaker 1"/></div></div>'+
+        '<div class="field"><label>Device Type</label>'+
+          '<select name="d_type_'+id+'" onchange="onTypeChange(this,'+id+')">'+typeOpts+'</select></div>'+
+        '<div class="field"><label>Device Name</label>'+
+          '<select id="dns_'+id+'" name="d_device_'+id+'"><option value="">Select device...</option></select></div>'+
+      '</div>'+
       '<div class="reading-group"><div class="reading-group-title">Voltage (V)</div><div class="readings-3">'+
-      '<div class="reading-cell"><div class="rc-label">V<sub>AB</sub></div><input type="number" name="d_vAB_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Volts</div></div>'+
-      '<div class="reading-cell"><div class="rc-label">V<sub>BC</sub></div><input type="number" name="d_vBC_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Volts</div></div>'+
-      '<div class="reading-cell"><div class="rc-label">V<sub>CA</sub></div><input type="number" name="d_vCA_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Volts</div></div></div></div>'+
+        '<div class="reading-cell"><div class="rc-label">V<sub>AB</sub></div><input type="number" name="d_vAB_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Volts</div></div>'+
+        '<div class="reading-cell"><div class="rc-label">V<sub>BC</sub></div><input type="number" name="d_vBC_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Volts</div></div>'+
+        '<div class="reading-cell"><div class="rc-label">V<sub>CA</sub></div><input type="number" name="d_vCA_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Volts</div></div>'+
+      '</div></div>'+
       '<div class="reading-group"><div class="reading-group-title">Current (A)</div><div class="readings-3">'+
-      '<div class="reading-cell"><div class="rc-label">I<sub>A</sub></div><input type="number" name="d_iA_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Amps</div></div>'+
-      '<div class="reading-cell"><div class="rc-label">I<sub>B</sub></div><input type="number" name="d_iB_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Amps</div></div>'+
-      '<div class="reading-cell"><div class="rc-label">I<sub>C</sub></div><input type="number" name="d_iC_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Amps</div></div></div></div>'+
+        '<div class="reading-cell"><div class="rc-label">I<sub>A</sub></div><input type="number" name="d_iA_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Amps</div></div>'+
+        '<div class="reading-cell"><div class="rc-label">I<sub>B</sub></div><input type="number" name="d_iB_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Amps</div></div>'+
+        '<div class="reading-cell"><div class="rc-label">I<sub>C</sub></div><input type="number" name="d_iC_'+id+'" placeholder="0.0" step="any" inputmode="decimal"/><div class="rc-unit">Amps</div></div>'+
+      '</div></div>'+
+      '<div class="photo-card"><div class="photo-card-title">Photo Documentation</div>'+
+        '<div class="photo-grid g2">'+
+          '<div class="photo-slot"><label>Voltage Photo</label>'+
+          '<input type="file" id="pp_v_'+id+'_in" accept="image/*" capture="environment"/>'+
+          '<div class="photo-prev" id="pp_v_'+id+'"><img/></div></div>'+
+          '<div class="photo-slot"><label>Current Photo</label>'+
+          '<input type="file" id="pp_i_'+id+'_in" accept="image/*" capture="environment"/>'+
+          '<div class="photo-prev" id="pp_i_'+id+'"><img/></div></div>'+
+        '</div>'+
+      '</div>'+
       '<div class="field"><label>Status</label><div class="status-row">'+
-      '<div class="status-btn ok" data-id="'+id+'" data-val="Normal" onclick="setStatus(this)">✓ Normal</div>'+
-      '<div class="status-btn" data-id="'+id+'" data-val="Warning" onclick="setStatus(this)">⚠ Warning</div>'+
-      '<div class="status-btn" data-id="'+id+'" data-val="Critical" onclick="setStatus(this)">✕ Critical</div>'+
+        '<div class="status-btn ok" data-id="'+id+'" data-val="Normal" onclick="setStatus(this)">✓ Normal</div>'+
+        '<div class="status-btn" data-id="'+id+'" data-val="Warning" onclick="setStatus(this)">⚠ Warning</div>'+
+        '<div class="status-btn" data-id="'+id+'" data-val="Critical" onclick="setStatus(this)">✕ Critical</div>'+
       '</div><input type="hidden" name="d_status_'+id+'" value="Normal"/></div>'+
       '<div class="field"><label>Remarks</label><textarea name="d_remarks_'+id+'" placeholder="Observations..."></textarea></div>'+
       '</div>';
     document.getElementById('deviceList').appendChild(wrap);
-    // Attach photo listeners
-    wrap.querySelectorAll('.photo-slot input[type=file]').forEach(function(inp,idx){
-      var prevId=idx===0?'pp_v_'+id:'pp_i_'+id;
-      inp.addEventListener('change',function(){prevPhoto(this,prevId);});
-    });
+    var pv=document.getElementById('pp_v_'+id+'_in');
+    if(pv) pv.addEventListener('change',function(){prevPhoto(this,'pp_v_'+id);});
+    var pi=document.getElementById('pp_i_'+id+'_in');
+    if(pi) pi.addEventListener('change',function(){prevPhoto(this,'pp_i_'+id);});
     updateDel();wrap.scrollIntoView({behavior:'smooth',block:'start'});
   }
   function removeDevice(id){var el=document.getElementById('dc-'+id);if(el)el.remove();updateDel();document.querySelectorAll('#deviceList .device-card').forEach(function(c,i){c.querySelector('.device-num').textContent='Device '+(i+1);});}
