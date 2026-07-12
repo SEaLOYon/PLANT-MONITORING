@@ -217,8 +217,7 @@
     <div class="field"><label>Plant <span class="required">*</span></label><select id="elec-plant" required><option value="" disabled selected>Select plant...</option><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div>
     <div class="field"><label>Technician</label><div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="elec-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="elec-tech" /></div>
     <div class="row-2">
-      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="elec-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="elec-shift" />
-      <div class="super-override" id="elec-sovr"><div class="row-2"><div class="field"><label>★ Plant Override</label><select id="elec-po" onchange="sPl('elec',this.value)"><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div><div class="field"><label>★ Shift Override</label><select id="elec-so" onchange="sSh('elec',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select></div></div></div></div>
+      <div class="field"><label>Shift</label><div class="id-locked" id="elec-shift-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="elec-shift-val">—</span><span class="id-locked-sub">assigned</span></div><select id="elec-shift-super" style="display:none;border-color:rgba(245,158,11,.4);color:var(--warn);" onchange="sSh('elec',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select><input type="hidden" id="elec-shift" /></div></div>
       <div class="field"><label>Date &amp; Time</label><div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div></div>
     </div>
   </div>
@@ -233,8 +232,7 @@
     <div class="field"><label>Plant <span class="required">*</span></label><select id="vib-plant" required><option value="" disabled selected>Select plant...</option><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div>
     <div class="field"><label>Technician</label><div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="vib-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="vib-tech" /></div>
     <div class="row-2">
-      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="vib-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="vib-shift" />
-      <div class="super-override" id="vib-sovr"><div class="row-2"><div class="field"><label>★ Plant Override</label><select id="vib-po" onchange="sPl('vib',this.value)"><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div><div class="field"><label>★ Shift Override</label><select id="vib-so" onchange="sSh('vib',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select></div></div></div></div>
+      <div class="field"><label>Shift</label><div class="id-locked" id="vib-shift-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="vib-shift-val">—</span><span class="id-locked-sub">assigned</span></div><select id="vib-shift-super" style="display:none;border-color:rgba(245,158,11,.4);color:var(--warn);" onchange="sSh('vib',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select><input type="hidden" id="vib-shift" /></div></div>
       <div class="field"><label>Date &amp; Time</label><div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div></div>
     </div>
   </div>
@@ -265,8 +263,7 @@
     <div class="field"><label>Plant <span class="required">*</span></label><select id="fuel-plant" required><option value="" disabled selected>Select plant...</option><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div>
     <div class="field"><label>Technician</label><div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="fuel-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="fuel-tech" /></div>
     <div class="row-2">
-      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="fuel-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="fuel-shift" />
-      <div class="super-override" id="fuel-sovr"><div class="row-2"><div class="field"><label>★ Plant Override</label><select id="fuel-po" onchange="sPl('fuel',this.value)"><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div><div class="field"><label>★ Shift Override</label><select id="fuel-so" onchange="sSh('fuel',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select></div></div></div></div>
+      <div class="field"><label>Shift</label><div class="id-locked" id="fuel-shift-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="fuel-shift-val">—</span><span class="id-locked-sub">assigned</span></div><select id="fuel-shift-super" style="display:none;border-color:rgba(245,158,11,.4);color:var(--warn);" onchange="sSh('fuel',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select><input type="hidden" id="fuel-shift" /></div></div>
       <div class="field"><label>Date &amp; Time</label><div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div></div>
     </div>
   </div>
@@ -286,8 +283,7 @@
     <div class="field"><label>Plant <span class="required">*</span></label><select id="chem-plant" required><option value="" disabled selected>Select plant...</option><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div>
     <div class="field"><label>Technician</label><div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="chem-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="chem-tech" /></div>
     <div class="row-2">
-      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="chem-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="chem-shift" />
-      <div class="super-override" id="chem-sovr"><div class="row-2"><div class="field"><label>★ Plant Override</label><select id="chem-po" onchange="sPl('chem',this.value)"><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div><div class="field"><label>★ Shift Override</label><select id="chem-so" onchange="sSh('chem',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select></div></div></div></div>
+      <div class="field"><label>Shift</label><div class="id-locked" id="chem-shift-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="chem-shift-val">—</span><span class="id-locked-sub">assigned</span></div><select id="chem-shift-super" style="display:none;border-color:rgba(245,158,11,.4);color:var(--warn);" onchange="sSh('chem',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select><input type="hidden" id="chem-shift" /></div></div>
       <div class="field"><label>Date &amp; Time</label><div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div></div>
     </div>
   </div>
@@ -326,8 +322,7 @@
     <div class="field"><label>Plant <span class="required">*</span></label><select id="boiler-plant" required><option value="" disabled selected>Select plant...</option><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div>
     <div class="field"><label>Technician</label><div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="boiler-tech-val">—</span><span class="id-locked-sub">signed in</span></div><input type="hidden" id="boiler-tech" /></div>
     <div class="row-2">
-      <div class="field"><label>Shift</label><div class="id-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="boiler-shift-val">—</span><span class="id-locked-sub">assigned</span></div><input type="hidden" id="boiler-shift" />
-      <div class="super-override" id="boiler-sovr"><div class="row-2"><div class="field"><label>★ Plant Override</label><select id="boiler-po" onchange="sPl('boiler',this.value)"><option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option></select></div><div class="field"><label>★ Shift Override</label><select id="boiler-so" onchange="sSh('boiler',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select></div></div></div></div>
+      <div class="field"><label>Shift</label><div class="id-locked" id="boiler-shift-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="boiler-shift-val">—</span><span class="id-locked-sub">assigned</span></div><select id="boiler-shift-super" style="display:none;border-color:rgba(245,158,11,.4);color:var(--warn);" onchange="sSh('boiler',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select><input type="hidden" id="boiler-shift" /></div></div>
       <div class="field"><label>Date &amp; Time</label><div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div></div>
     </div>
   </div>
@@ -453,7 +448,27 @@
       if(plantEl&&user.plant){for(var i=0;i<plantEl.options.length;i++){if(plantEl.options[i].value===user.plant){plantEl.selectedIndex=i;break;}}}
     });
     var isSuper=user.role==='SUPER';
-    ['elec','vib','fuel','chem','boiler','pr'].forEach(function(p){var so=document.getElementById(p+'-sovr');if(so)so.style.display=isSuper?'block':'none';});
+    ['elec','vib','fuel','chem','boiler','pr'].forEach(function(p){
+      var plantEl=document.getElementById(p+'-plant');
+      var shiftLocked=document.getElementById(p+'-shift-locked');
+      var shiftSuper=document.getElementById(p+'-shift-super');
+      if(isSuper){
+        // Plant stays as select (already editable)
+        if(plantEl) plantEl.style.borderColor='rgba(245,158,11,.4)';
+        // Swap shift: hide locked, show editable select
+        if(shiftLocked) shiftLocked.style.display='none';
+        if(shiftSuper){
+          shiftSuper.style.display='flex';
+          shiftSuper.value=user.shift||'Day';
+          document.getElementById(p+'-shift').value=shiftSuper.value;
+        }
+      } else {
+        // Normal: keep plant select but auto-select and disable
+        if(plantEl){plantEl.style.borderColor='';plantEl.disabled=true;}
+        if(shiftLocked) shiftLocked.style.display='flex';
+        if(shiftSuper) shiftSuper.style.display='none';
+      }
+    });
     document.getElementById('badgeName').innerHTML=user.name+(isSuper?'<span class="super-badge">★ SUPER</span>':'');
     document.getElementById('userBadge').style.display='flex';
     var overlay=document.getElementById('loginOverlay');
@@ -473,6 +488,12 @@
 
   function doLogout(){
     currentUser=null;
+    ['elec','vib','fuel','chem','boiler','pr'].forEach(function(p){
+      var pEl=document.getElementById(p+'-plant');
+      if(pEl){pEl.disabled=false;pEl.style.borderColor='';pEl.selectedIndex=0;}
+      var sl=document.getElementById(p+'-shift-locked');if(sl)sl.style.display='flex';
+      var ss=document.getElementById(p+'-shift-super');if(ss)ss.style.display='none';
+    });
     ['elec','vib','fuel','chem','boiler','pr'].forEach(function(prefix){
       ['tech','shift'].forEach(function(f){var el=document.getElementById(prefix+'-'+f);if(el)el.value='';var v=document.getElementById(prefix+'-'+f+'-val');if(v)v.textContent='—';});
     });
