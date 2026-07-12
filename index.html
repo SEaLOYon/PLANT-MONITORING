@@ -31,7 +31,7 @@
   .tab-btn.active { color:var(--accent2); border-bottom-color:var(--accent2); }
   .tab-panel { display:none; }
   .tab-panel.active { display:block; }
-  .container { max-width:600px; margin:0 auto; padding:1rem .9rem; }
+  .container { max-width:720px; margin:0 auto; padding:1rem .9rem; }
   .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; margin-bottom:.9rem; }
   .card-title { font-family:Rajdhani,sans-serif; font-size:.72rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent2); margin-bottom:.85rem; display:flex; align-items:center; gap:8px; }
   .card-title::after { content:''; flex:1; height:1px; background:var(--border); }
@@ -428,13 +428,18 @@
     var btn=document.getElementById('loginBtn'),errEl=document.getElementById('loginError');
     if(!username||!password){errEl.textContent='Please enter both fields.';errEl.classList.add('show');return;}
     btn.disabled=true;btn.innerHTML=SPIN_SVG+' Signing in...';errEl.classList.remove('show');
-    var cbName='loginCb_'+Date.now(),s=document.createElement('script');
-    var timeout=setTimeout(function(){cleanup();loginFailed('Connection timeout.');},10000);
-    function cleanup(){clearTimeout(timeout);delete window[cbName];if(s.parentNode)s.parentNode.removeChild(s);}
-    window[cbName]=function(res){cleanup();if(res&&res.result==='success'&&res.user){loginSuccess(res.user);}else{loginFailed(res&&res.message?res.message:'Incorrect username or password.');}};
-    s.onerror=function(){cleanup();loginFailed('Network error.');};
-    s.src=SCRIPT_URL+'?action=login&username='+encodeURIComponent(username)+'&password='+encodeURIComponent(password)+'&callback='+cbName;
-    document.head.appendChild(s);
+    var attempt = 0;
+    function tryLogin() {
+      attempt++;
+      var cbName='loginCb_'+Date.now()+'_'+attempt, s=document.createElement('script');
+      var timeout=setTimeout(function(){cleanup();if(attempt<2){tryLogin();}else{loginFailed('Connection timeout. Check internet.');}},15000);
+      function cleanup(){clearTimeout(timeout);delete window[cbName];if(s.parentNode)s.parentNode.removeChild(s);}
+      window[cbName]=function(res){cleanup();if(res&&res.result==='success'&&res.user){loginSuccess(res.user);}else{loginFailed(res&&res.message?res.message:'Incorrect username or password.');}};
+      s.onerror=function(){cleanup();if(attempt<2){setTimeout(tryLogin,500);}else{loginFailed('Network error. Try again in a moment.');}};
+      s.src=SCRIPT_URL+'?action=login&username='+encodeURIComponent(username)+'&password='+encodeURIComponent(password)+'&callback='+cbName;
+      document.head.appendChild(s);
+    }
+    tryLogin();
   }
 
   function loginSuccess(user){
