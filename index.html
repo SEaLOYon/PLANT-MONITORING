@@ -522,6 +522,7 @@
     window[cb]=function(r){clearTimeout(t);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);
       if(r&&r.result==='success'){if(r.types)DEV_TYPES=r.types;if(r.names)DEV_NAMES=r.names;}
       refreshDeviceTypeSelects();
+      populateAllDeviceNames();
     };
     s.src=SCRIPT_URL+'?action=getDeviceConfig&callback='+cb;
     document.head.appendChild(s);
@@ -537,13 +538,35 @@
   }
 
   function onTypeChange(sel,id){
-    var type=sel.value;
     var ns=document.getElementById('dns_'+id);
     if(!ns)return;
-    var names=DEV_NAMES[type]||[];
+    // Collect ALL device names from all types (union)
+    var allNames=[];
+    Object.keys(DEV_NAMES).forEach(function(t){
+      (DEV_NAMES[t]||[]).forEach(function(n){
+        if(allNames.indexOf(n)===-1) allNames.push(n);
+      });
+    });
     ns.innerHTML='<option value="">Select device...</option>';
-    names.forEach(function(n){var o=document.createElement('option');o.value=n;o.textContent=n;ns.appendChild(o);});
+    allNames.forEach(function(n){var o=document.createElement('option');o.value=n;o.textContent=n;ns.appendChild(o);});
   }
+
+  function populateAllDeviceNames(){
+    var allNames=[];
+    Object.keys(DEV_NAMES).forEach(function(t){
+      (DEV_NAMES[t]||[]).forEach(function(n){
+        if(allNames.indexOf(n)===-1) allNames.push(n);
+      });
+    });
+    document.querySelectorAll('[id^="dns_"]').forEach(function(sel){
+      var cur=sel.value;
+      sel.innerHTML='<option value="">Select device...</option>';
+      allNames.forEach(function(n){var o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);});
+      if(cur) sel.value=cur;
+    });
+  }
+
+
 
   function sPl(prefix,val){var el=document.getElementById(prefix+'-plant');if(el){for(var i=0;i<el.options.length;i++){if(el.options[i].value===val){el.selectedIndex=i;break;}}}}
   function sSh(prefix,val){var el=document.getElementById(prefix+'-shift');if(el)el.value=val;var v=document.getElementById(prefix+'-shift-val');if(v)v.textContent=val+' Shift';}
@@ -593,6 +616,7 @@
       '<div class="field"><label>Remarks</label><textarea name="d_remarks_'+id+'" placeholder="Observations..."></textarea></div>'+
       '</div>';
     document.getElementById('deviceList').appendChild(wrap);
+    populateAllDeviceNames();
     var pv=document.getElementById('pp_v_'+id+'_in');
     if(pv) pv.addEventListener('change',function(){prevPhoto(this,'pp_v_'+id);});
     var pi=document.getElementById('pp_i_'+id+'_in');
