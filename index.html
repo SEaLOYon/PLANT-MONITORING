@@ -390,6 +390,16 @@
     });
   }
 
+  // PWA warm-up: wait for service worker to fully activate before first JSONP call
+  var swReady = false;
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.ready.then(function(){ swReady=true; });
+    setTimeout(function(){ swReady=true; }, 2000); // fallback timeout
+  } else {
+    swReady = true;
+  }
+
+
   // PMS-v3 — stable login version with all tabs
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQnwrqBv5Oq1XQ709-6XTvBlQV6UJ1SMnmk6XKUtMs5ugYBOGrSSoU-x9XbuEl-duB/exec';
   const SPIN_SVG = '<svg viewBox="0 0 24 24" style="animation:spin 1s linear infinite;width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>';
