@@ -1,55 +1,40 @@
-// TechMon Service Worker - always fetches fresh from network
-// This fixes the mobile browser caching that causes login network errors
+// TechMon Service Worker v2 — Pass-through for all external requests
 
-const CACHE_NAME = 'techmon-v4-' + Date.now();
+const CACHE = 'techmon-static-v4';
+const STATIC_ASSETS = ['./index.html','./manifest.json','./icon-192.png','./icon-512.png','./favicon.png'];
 
-// On install: skip waiting so new SW activates immediately
-self.addEventListener('install', event => {
+self.addEventListener('install', e => {
   self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC_ASSETS).catch(()=>{})));
 });
 
-// On activate: claim clients and delete old caches
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(names => {
-      return Promise.all(
-        names.filter(n => n !== CACHE_NAME).map(n => caches.delete(n))
-      );
-    }).then(() => self.clients.claim())
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(names => Promise.all(names.filter(n => n !== CACHE).map(n => caches.delete(n))))
+    .then(() => self.clients.claim())
   );
 });
 
-// Fetch strategy: network-first for HTML, cache-first for static assets
-self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
+self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
 
-  // Never cache Apps Script calls or third-party scripts
-  if (url.hostname.includes('script.google.com') ||
-      url.hostname.includes('googleapis.com') ||
-      url.hostname.includes('gstatic.com')) {
-    return; // Let browser handle normally
+  // CRITICAL: DO NOT intercept ANY external requests
+  // Just let the browser handle them natively
+  if (url.origin !== self.location.origin) {
+    return; // Browser handles it directly — no SW interference
   }
 
-  // Network-first for HTML pages (always get fresh)
-  if (event.request.mode === 'navigate' ||
-      event.request.destination === 'document') {
-    event.respondWith(
-      fetch(event.request).catch(() => caches.match(event.request))
+  // Only handle same-origin requests (our HTML and icons)
+  // Network-first for HTML
+  if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/') {
+    e.respondWith(
+      fetch(e.request).catch(() => caches.match(e.request) || caches.match('./index.html'))
     );
     return;
   }
 
-  // Cache-first for icons and manifest
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      return cached || fetch(event.request).then(response => {
-        if (response.ok && (event.request.url.endsWith('.png') ||
-                            event.request.url.endsWith('.json'))) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      });
-    })
+  // Cache-first for icons/manifest
+  e.respondWith(
+    caches.match(e.request).then(cached => cached || fetch(e.request))
   );
 });
