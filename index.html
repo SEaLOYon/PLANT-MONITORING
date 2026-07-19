@@ -179,6 +179,19 @@
   .photo-prev{display:none;margin-top:3px;}
   .photo-prev img{width:100%;border-radius:7px;border:1px solid var(--border);max-height:140px;object-fit:cover;}
 
+
+  .pw-overlay { display:none; position:fixed; inset:0; z-index:250; background:rgba(11,15,26,.85); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:1.5rem; }
+  .pw-overlay.show { display:flex; }
+  .pw-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:1.75rem 1.4rem; width:100%; max-width:380px; box-shadow:0 20px 60px rgba(0,0,0,.6); }
+  .pw-title { font-family:Rajdhani,sans-serif; font-size:1.15rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#fff; text-align:center; margin-bottom:.25rem; }
+  .pw-sub { font-size:.72rem; color:var(--muted); text-align:center; margin-bottom:1.3rem; }
+
+
+  .prev-ref { font-size:.68rem; color:var(--muted); margin-top:3px; font-family:Rajdhani,sans-serif; letter-spacing:.03em; }
+  .prev-ref-val { color:var(--accent2); font-weight:700; }
+  .meter-card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:.75rem .9rem; }
+  .meter-name { font-family:Rajdhani,sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--accent2); margin-bottom:.45rem; }
+
   @keyframes spin { to { transform:rotate(360deg); } }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
 </style>
@@ -205,13 +218,14 @@
   <div class="header-text"><h1>TECHMON</h1><p>Vienovo · Technician Monitoring</p></div>
   <div class="user-badge" id="userBadge" style="display:none;">
     <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    <span id="badgeName">—</span><button class="logout-btn" onclick="doLogout()">logout</button>
+    <span id="badgeName">—</span><button class="logout-btn" onclick="openPwChange()" style="color:var(--accent2);">change pw</button><button class="logout-btn" onclick="doLogout()">logout</button>
   </div>
 </div>
 <div class="live-bar"><div class="dot"></div><span>Live · Syncs to dashboard</span></div>
 
 <div class="tab-nav-wrap"><div class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('electrical')" id="tab-electrical"><svg viewBox="0 0 24 24"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Line</button>
+  <button class="tab-btn" onclick="switchTab('econsum')" id="tab-econsum"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="8" y2="15"/><line x1="11" y1="15" x2="13" y2="15"/></svg>Consumption</button>
   <button class="tab-btn" onclick="switchTab('vibration')" id="tab-vibration"><svg viewBox="0 0 24 24"><path d="M2 12h2l3-9 4 18 3-9h2"/><line x1="20" y1="8" x2="20" y2="16"/></svg>Vibration</button>
   <button class="tab-btn" onclick="switchTab('fuel')" id="tab-fuel"><svg viewBox="0 0 24 24"><path d="M3 22V8l7-6 7 6v14"/><rect x="9" y="14" width="4" height="8"/><path d="M17 8h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1"/></svg>Fuel</button>
   <button class="tab-btn" onclick="switchTab('chemical')" id="tab-chemical"><svg viewBox="0 0 24 24"><path d="M9 3h6v10l4 8H5l4-8V3z"/><line x1="9" y1="7" x2="15" y2="7"/></svg>Chem &amp; Softener</button>
@@ -232,6 +246,58 @@
   <div id="deviceList"></div>
   <button type="button" class="add-device-btn" onclick="addDevice()"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Device</button>
   <button type="submit" class="submit-btn" id="elecSubmitBtn"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SUBMIT LINE REPORT</button>
+</form></div></div>
+
+
+<!-- TAB: ELECTRIC CONSUMPTION -->
+<div class="tab-panel" id="panel-econsum"><div class="container"><form id="econsumForm">
+  <div class="card"><div class="card-title">Identification</div>
+    <div class="field"><label>Plant <span class="required">*</span></label>
+      <select id="ec-plant" required onchange="loadElectricMeters(this.value)">
+        <option value="" disabled selected>Select plant...</option>
+        <option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option>
+      </select>
+    </div>
+    <div class="field"><label>Technician</label>
+      <div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="ec-tech-val">—</span><span class="id-locked-sub">signed in</span></div>
+      <input type="hidden" id="ec-tech" />
+    </div>
+    <div class="row-2">
+      <div class="field"><label>Shift</label>
+        <div class="id-locked" id="ec-shift-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="ec-shift-val">—</span><span class="id-locked-sub">assigned</span></div>
+        <select id="ec-shift-super" style="display:none;border-color:rgba(245,158,11,.4);color:var(--warn);" onchange="sSh('ec',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select>
+        <input type="hidden" id="ec-shift" />
+      </div>
+      <div class="field"><label>Date &amp; Time</label>
+        <div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card"><div class="card-title">Meter Readings (kWh)</div>
+    <div id="ec-meter-list" style="display:flex;flex-direction:column;gap:.75rem;">
+      <div style="text-align:center;padding:2rem;color:var(--muted);font-size:.85rem;">Select a plant to load meters...</div>
+    </div>
+    <div class="field" style="margin-top:.85rem;"><label>Remarks</label>
+      <textarea name="ec_remarks" placeholder="Note any unusual consumption, meter issues, power outages..."></textarea>
+    </div>
+  </div>
+
+  <div class="card"><div class="card-title">Photo Documentation</div>
+    <div class="photo-grid g2">
+      <div class="photo-slot"><label>Meter Photo 1</label>
+        <input type="file" id="pf_ec1" accept="image/*" capture="environment"/>
+        <div class="photo-prev" id="pf_ec1_p"><img/></div></div>
+      <div class="photo-slot"><label>Meter Photo 2</label>
+        <input type="file" id="pf_ec2" accept="image/*" capture="environment"/>
+        <div class="photo-prev" id="pf_ec2_p"><img/></div></div>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn" id="ecSubmitBtn">
+    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    SUBMIT CONSUMPTION REPORT
+  </button>
 </form></div></div>
 
 <!-- TAB 2: VIBRATION -->
@@ -276,8 +342,10 @@
     </div>
   </div>
   <div class="card"><div class="card-title">Tank Readings</div>
-    <div class="field"><label>Day Tank Reading (cm)</label><input type="number" id="fuel-day-pres" name="fuel_day_pres" placeholder="0.0" step="0.1" inputmode="decimal"/></div>
-    <div class="field"><label>Main Tank Reading (cm)</label><input type="number" id="fuel-main-pres" name="fuel_main_pres" placeholder="0.0" step="0.1" inputmode="decimal"/></div>
+    <div class="field"><label>Day Tank Reading (cm)</label><input type="number" id="fuel-day-pres" name="fuel_day_pres" placeholder="0.0" step="0.1" inputmode="decimal"/>
+      <div class="prev-ref" id="fuel-day-prev-ref">No previous reading</div></div>
+    <div class="field"><label>Main Tank Reading (cm)</label><input type="number" id="fuel-main-pres" name="fuel_main_pres" placeholder="0.0" step="0.1" inputmode="decimal"/>
+      <div class="prev-ref" id="fuel-main-prev-ref">No previous reading</div></div>
     <div class="field"><label>Remarks</label><textarea name="fuel_remarks" placeholder="Fuel condition, leaks, abnormal observations..."></textarea></div>
   </div>
 
@@ -401,11 +469,11 @@
 
 
   // PMS-v3 — stable login version with all tabs
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwpx_YIm0VUkiiqJHQyyMGmluEAe2Mc0dWxWJbrgdMnQ8P6sTQ3yCipDkepsYva_9Lq/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9e5DFi7lvCjNBNomWQ06KTi964hjp5P6BklncAoeDwZKMfJSfkZB2kN4-FnIqgPue/exec';
   const SPIN_SVG = '<svg viewBox="0 0 24 24" style="animation:spin 1s linear infinite;width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>';
   const SEND_SVG = '<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
 
-  var PANELS=['electrical','vibration','fuel','chemical','boiler','purchase'];
+  var PANELS=['electrical','econsum','vibration','fuel','chemical','boiler','purchase'];
   function switchTab(id){PANELS.forEach(function(p){document.getElementById('panel-'+p).classList.toggle('active',p===id);document.getElementById('tab-'+p).classList.toggle('active',p===id);});window.scrollTo({top:0,behavior:'smooth'});}
 
   var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],DA=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -443,6 +511,171 @@
     });
   }
 
+
+  // ── CHANGE PASSWORD ──
+  function openPwChange(){
+    document.getElementById('pwCurrent').value='';
+    document.getElementById('pwNew').value='';
+    document.getElementById('pwConfirm').value='';
+    document.getElementById('pwError').classList.remove('show');
+    document.getElementById('pwOverlay').classList.add('show');
+  }
+  function closePwChange(){
+    document.getElementById('pwOverlay').classList.remove('show');
+  }
+  function savePassword(){
+    var cur=document.getElementById('pwCurrent').value;
+    var neu=document.getElementById('pwNew').value;
+    var con=document.getElementById('pwConfirm').value;
+    var err=document.getElementById('pwError');
+    var btn=document.getElementById('pwSaveBtn');
+    if(!cur||!neu||!con){err.textContent='Fill in all fields.';err.classList.add('show');return;}
+    if(neu.length<4){err.textContent='New password must be at least 4 characters.';err.classList.add('show');return;}
+    if(neu!==con){err.textContent='New passwords do not match.';err.classList.add('show');return;}
+    if(!currentUser){err.textContent='Not logged in.';err.classList.add('show');return;}
+    btn.disabled=true;btn.textContent='Saving...';err.classList.remove('show');
+
+    var cbName='pwCb_'+Date.now(),s=document.createElement('script');
+    var timeout=setTimeout(function(){cleanup();err.textContent='Timeout. Try again.';err.classList.add('show');btn.disabled=false;btn.textContent='Save';},15000);
+    function cleanup(){clearTimeout(timeout);delete window[cbName];if(s.parentNode)s.parentNode.removeChild(s);}
+    window[cbName]=function(res){
+      cleanup();
+      if(res&&res.result==='success'){
+        closePwChange();
+        showToast('Password updated successfully!');
+      } else {
+        err.textContent=res&&res.message?res.message:'Failed. Try again.';
+        err.classList.add('show');
+      }
+      btn.disabled=false;btn.textContent='Save';
+    };
+    s.onerror=function(){cleanup();err.textContent='Network error.';err.classList.add('show');btn.disabled=false;btn.textContent='Save';};
+    s.src=SCRIPT_URL+'?action=changePassword'
+         +'&username='+encodeURIComponent(currentUser.name)
+         +'&currentPw='+encodeURIComponent(cur)
+         +'&newPw='+encodeURIComponent(neu)
+         +'&callback='+cbName;
+    document.head.appendChild(s);
+  }
+
+
+  /* ══════════════════════════════════════
+     ELECTRIC CONSUMPTION
+  ══════════════════════════════════════ */
+  var CURRENT_METERS = [];
+
+  function loadElectricMeters(plant){
+    if(!plant) return;
+    var list = document.getElementById('ec-meter-list');
+    list.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.8rem;">Loading meters and previous readings...</div>';
+    var cb='ecm_'+Date.now(), s=document.createElement('script');
+    var timer=setTimeout(function(){
+      clearTimeout(timer); delete window[cb];
+      if(s.parentNode) s.parentNode.removeChild(s);
+      list.innerHTML='<div style="text-align:center;padding:1rem;color:var(--danger);font-size:.8rem;">Failed to load. Try again.</div>';
+    }, 8000);
+    s.onerror=function(){clearTimeout(timer);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};
+    window[cb]=function(res){
+      clearTimeout(timer); delete window[cb];
+      if(s.parentNode) s.parentNode.removeChild(s);
+      if(res && res.result==='success' && res.meters){
+        CURRENT_METERS = res.meters;
+        renderMeterCards(res.meters);
+      } else {
+        list.innerHTML='<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.8rem;">No meters configured for '+plant+'.</div>';
+      }
+    };
+    s.src=SCRIPT_URL+'?action=getElectricMeters&plant='+encodeURIComponent(plant)+'&callback='+cb;
+    document.head.appendChild(s);
+  }
+
+  function renderMeterCards(meters){
+    var list = document.getElementById('ec-meter-list');
+    list.innerHTML = '';
+    meters.forEach(function(m, idx){
+      var card = document.createElement('div');
+      card.className = 'meter-card';
+      var prevText = m.prev_reading
+        ? 'Previous: <span class="prev-ref-val">'+m.prev_reading+' kWh</span> ('+m.prev_date+')'
+        : 'No previous reading';
+      card.innerHTML =
+        '<div class="meter-name">'+m.name+'</div>'+
+        '<input type="number" name="meter_'+idx+'" data-meter="'+m.name+'" placeholder="0.00" step="0.01" inputmode="decimal" style="margin-bottom:4px;"/>'+
+        '<div class="prev-ref">'+prevText+'</div>';
+      list.appendChild(card);
+    });
+  }
+
+  document.getElementById('econsumForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = document.getElementById('ecSubmitBtn');
+    btn.disabled = true; btn.innerHTML = SPIN_SVG+' Submitting...';
+    var now = new Date(), form = document.getElementById('econsumForm');
+    var readings = {};
+    CURRENT_METERS.forEach(function(m, idx){
+      var input = form.querySelector('[name="meter_'+idx+'"]');
+      readings[m.name] = input ? input.value : '';
+    });
+    var params = {
+      type: 'econsum',
+      timestamp: now.toISOString(),
+      date: now.toLocaleDateString('en-PH'),
+      time: now.toLocaleTimeString('en-PH'),
+      plant: document.getElementById('ec-plant').value,
+      technician: document.getElementById('ec-tech').value,
+      shift: document.getElementById('ec-shift').value,
+      readings: JSON.stringify(readings),
+      remarks: form.querySelector('[name="ec_remarks"]').value
+    };
+    submitViaJSONP(params,
+      function(){
+        showToast('Consumption report submitted!');
+        form.reset();
+        document.getElementById('ec-meter-list').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.85rem;">Select a plant to load meters...</div>';
+        window.scrollTo({top:0,behavior:'smooth'});
+        btn.disabled = false; btn.innerHTML = SEND_SVG+' SUBMIT CONSUMPTION REPORT';
+      },
+      function(){
+        showToast('Failed.', true);
+        btn.disabled = false; btn.innerHTML = SEND_SVG+' SUBMIT CONSUMPTION REPORT';
+      }
+    );
+  });
+
+  // Also load fuel previous readings when fuel plant changes
+  var fuelPlantEl = document.getElementById('fuel-plant');
+  if(fuelPlantEl){
+    fuelPlantEl.addEventListener('change', function(){ loadFuelPrevReadings(this.value); });
+  }
+
+  function loadFuelPrevReadings(plant){
+    if(!plant) return;
+    var cb='fp_'+Date.now(), s=document.createElement('script');
+    var timer=setTimeout(function(){clearTimeout(timer);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);},6000);
+    s.onerror=function(){clearTimeout(timer);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};
+    window[cb]=function(res){
+      clearTimeout(timer); delete window[cb];
+      if(s.parentNode) s.parentNode.removeChild(s);
+      if(res && res.result==='success'){
+        var dayRef = document.getElementById('fuel-day-prev-ref');
+        var mainRef = document.getElementById('fuel-main-prev-ref');
+        if(dayRef){
+          dayRef.innerHTML = res.dayPrev
+            ? 'Previous: <span class="prev-ref-val">'+res.dayPrev+' cm</span> ('+res.dayDate+')'
+            : 'No previous reading';
+        }
+        if(mainRef){
+          mainRef.innerHTML = res.mainPrev
+            ? 'Previous: <span class="prev-ref-val">'+res.mainPrev+' cm</span> ('+res.mainDate+')'
+            : 'No previous reading';
+        }
+      }
+    };
+    s.src=SCRIPT_URL+'?action=getFuelPrev&plant='+encodeURIComponent(plant)+'&callback='+cb;
+    document.head.appendChild(s);
+  }
+
+
   // LOGIN
   var currentUser=null;
   document.getElementById('loginUser').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
@@ -470,7 +703,7 @@
 
   function loginSuccess(user){
     currentUser=user;
-    ['elec','vib','fuel','chem','boiler','pr'].forEach(function(prefix){
+    ['elec','ec','vib','fuel','chem','boiler','pr'].forEach(function(prefix){
       var techEl=document.getElementById(prefix+'-tech'),techVal=document.getElementById(prefix+'-tech-val');
       var shiftEl=document.getElementById(prefix+'-shift'),shiftVal=document.getElementById(prefix+'-shift-val');
       if(techEl)techEl.value=user.name||'';if(techVal)techVal.textContent=user.name||'—';
@@ -479,7 +712,7 @@
       if(plantEl&&user.plant){for(var i=0;i<plantEl.options.length;i++){if(plantEl.options[i].value===user.plant){plantEl.selectedIndex=i;break;}}}
     });
     var isSuper=user.role==='SUPER';
-    ['elec','vib','fuel','chem','boiler','pr'].forEach(function(p){
+    ['elec','ec','vib','fuel','chem','boiler','pr'].forEach(function(p){
       var plantEl=document.getElementById(p+'-plant');
       var shiftLocked=document.getElementById(p+'-shift-locked');
       var shiftSuper=document.getElementById(p+'-shift-super');
@@ -522,13 +755,13 @@
 
   function doLogout(){
     currentUser=null;
-    ['elec','vib','fuel','chem','boiler','pr'].forEach(function(p){
+    ['elec','ec','vib','fuel','chem','boiler','pr'].forEach(function(p){
       var pEl=document.getElementById(p+'-plant');
       if(pEl){pEl.disabled=false;pEl.style.borderColor='';pEl.selectedIndex=0;}
       var sl=document.getElementById(p+'-shift-locked');if(sl)sl.style.display='flex';
       var ss=document.getElementById(p+'-shift-super');if(ss)ss.style.display='none';
     });
-    ['elec','vib','fuel','chem','boiler','pr'].forEach(function(prefix){
+    ['elec','ec','vib','fuel','chem','boiler','pr'].forEach(function(prefix){
       ['tech','shift'].forEach(function(f){var el=document.getElementById(prefix+'-'+f);if(el)el.value='';var v=document.getElementById(prefix+'-'+f+'-val');if(v)v.textContent='—';});
     });
     document.getElementById('userBadge').style.display='none';
