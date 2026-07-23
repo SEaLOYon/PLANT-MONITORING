@@ -735,8 +735,13 @@
     });
     document.getElementById('badgeName').innerHTML=user.name+(isSuper?'<span class="super-badge">★ SUPER</span>':'');
     loadDeviceConfig();
-    // Load boiler config for logged-in plant
-    if(user.plant) setTimeout(function(){ loadBoilerConfig(user.plant); },500);
+    if(user.plant){
+      setTimeout(function(){
+        loadBoilerConfig(user.plant);
+        loadElectricMeters(user.plant);
+        loadFuelPrevReadings(user.plant);
+      },500);
+    }
     document.getElementById('userBadge').style.display='flex';
     var overlay=document.getElementById('loginOverlay');
     overlay.classList.add('hiding');setTimeout(function(){overlay.classList.add('hidden');},400);
