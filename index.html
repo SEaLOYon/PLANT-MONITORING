@@ -192,6 +192,12 @@
   .meter-card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:.75rem .9rem; }
   .meter-name { font-family:Rajdhani,sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--accent2); margin-bottom:.45rem; }
 
+
+  .yn-row { display:flex; gap:.4rem; justify-content:center; }
+  .yn-btn { flex:1; max-width:60px; height:34px; border:1px solid var(--border); border-radius:7px; background:var(--surface2); color:var(--muted); font-family:Rajdhani,sans-serif; font-size:.75rem; font-weight:700; letter-spacing:.05em; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:all .15s; }
+  .yn-btn.yes-on { background:rgba(16,185,129,.15); border-color:var(--success); color:var(--success); }
+  .yn-btn.no-on { background:rgba(239,68,68,.12); border-color:var(--danger); color:var(--danger); }
+
   @keyframes spin { to { transform:rotate(360deg); } }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
 </style>
@@ -957,6 +963,15 @@
     {key:'ph',name:'pH Level',unit:'',limit:'10.5-11.5'},
   ];
 
+
+  function setYN(btn){
+    var key=btn.dataset.key, val=btn.dataset.val;
+    var row=btn.closest('tr');
+    row.querySelectorAll('.yn-btn').forEach(function(b){b.className='yn-btn';});
+    btn.classList.add(val==='YES'?'yes-on':'no-on');
+    document.getElementById('br-'+key).value=val;
+  }
+
   function buildBoilerTable(){
     var tbody=document.getElementById('boilerTbody');if(!tbody)return;tbody.innerHTML='';
     BOILER_PARAMS.forEach(function(p){
@@ -968,7 +983,7 @@
         '<td style="padding:.35rem .5rem;border-right:1px solid rgba(99,180,255,.07);font-size:.8rem;color:var(--text);font-weight:500;">'+p.name+'</td>'+
         '<td style="padding:.35rem .5rem;border-right:1px solid rgba(99,180,255,.07);font-family:Rajdhani,sans-serif;font-size:.72rem;font-weight:700;color:var(--muted);text-align:center;" id="bu-'+p.key+'">'+p.unit+'</td>'+
         '<td style="padding:.35rem .5rem;border-right:1px solid rgba(99,180,255,.07);font-family:Rajdhani,sans-serif;font-size:.72rem;font-weight:600;color:var(--warn);text-align:center;" id="bl-'+p.key+'">'+p.limit+'</td>'+
-        '<td style="padding:.35rem .45rem;border-right:1px solid rgba(99,180,255,.07);"><input type="number" id="br-'+p.key+'" name="br_'+p.key+'" placeholder="0" step="0.01" inputmode="decimal" style="-moz-appearance:textfield;width:100%;height:34px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:0 .3rem;color:var(--text);font-family:Rajdhani,sans-serif;font-size:.92rem;font-weight:700;text-align:center;outline:none;" /></td>'+
+        (p.key==='blowdown'?'<td style="padding:.35rem .45rem;border-right:1px solid rgba(99,180,255,.07);">'+'<div class="yn-row">'+'<button type="button" class="yn-btn" data-key="'+p.key+'" data-val="YES" onclick="setYN(this)">YES</button>'+'<button type="button" class="yn-btn" data-key="'+p.key+'" data-val="NO" onclick="setYN(this)">NO</button>'+'</div>'+'<input type="hidden" id="br-'+p.key+'" name="br_'+p.key+'" value="" />'+'</td>':'<td style="padding:.35rem .45rem;border-right:1px solid rgba(99,180,255,.07);"><input type="number" id="br-'+p.key+'" name="br_'+p.key+'" placeholder="0" step="0.01" inputmode="decimal" style="-moz-appearance:textfield;width:100%;height:34px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:0 .3rem;color:var(--text);font-family:Rajdhani,sans-serif;font-size:.92rem;font-weight:700;text-align:center;outline:none;" /></td>')+
         '<td style="padding:.35rem .45rem;"><input type="text" name="brr_'+p.key+'" placeholder="remarks..." style="width:100%;height:32px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:0 .5rem;color:var(--text);font-family:DM Sans,sans-serif;font-size:.75rem;outline:none;" /></td>';
       tbody.appendChild(tr);
     });
