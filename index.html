@@ -198,6 +198,103 @@
   .yn-btn.yes-on { background:rgba(16,185,129,.15); border-color:var(--success); color:var(--success); }
   .yn-btn.no-on { background:rgba(239,68,68,.12); border-color:var(--danger); color:var(--danger); }
 
+
+  /* ── ANIMATED TAB BACKGROUNDS ── */
+  .tab-panel { position:relative; overflow:hidden; }
+  .tab-panel::before {
+    content:''; position:fixed; inset:0; z-index:-1;
+    opacity:0; pointer-events:none;
+    background-position:center; background-repeat:repeat;
+    transition:opacity .8s ease;
+  }
+  .tab-panel.active::before { opacity:.22; }
+
+  /* LINE — electrical lightning bolts */
+  #panel-electrical::before {
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><polyline points='60,10 40,55 65,55 45,110' stroke='%2306b6d4' stroke-width='2.5' fill='none' opacity='1'/><polyline points='20,20 12,50 25,50 15,90' stroke='%2306b6d4' stroke-width='2' fill='none' opacity='0.8'/><polyline points='95,25 85,60 100,60 90,100' stroke='%2306b6d4' stroke-width='2' fill='none' opacity='0.8'/></svg>");
+    animation:bgDrift 60s linear infinite;
+  }
+
+  /* CONSUMPTION — meter/gauge pattern */
+  #panel-econsum::before {
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><circle cx='70' cy='70' r='40' stroke='%233b82f6' stroke-width='2.2' fill='none'/><circle cx='70' cy='70' r='28' stroke='%233b82f6' stroke-width='1.6' fill='none'/><line x1='70' y1='30' x2='70' y2='40' stroke='%233b82f6' stroke-width='1'/><line x1='70' y1='100' x2='70' y2='110' stroke='%233b82f6' stroke-width='1'/><line x1='30' y1='70' x2='40' y2='70' stroke='%233b82f6' stroke-width='1'/><line x1='100' y1='70' x2='110' y2='70' stroke='%233b82f6' stroke-width='1'/><line x1='70' y1='70' x2='90' y2='55' stroke='%233b82f6' stroke-width='1.5'/></svg>");
+    animation:bgDrift 90s linear infinite;
+  }
+
+  /* VIBRATION — waveform pattern */
+  #panel-vibration::before {
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='80' viewBox='0 0 160 80'><path d='M0,40 Q20,10 40,40 T80,40 T120,40 T160,40' stroke='%2306b6d4' stroke-width='2.2' fill='none'/><path d='M0,40 Q20,60 40,40 T80,40 T120,40 T160,40' stroke='%2306b6d4' stroke-width='1.6' fill='none' opacity='0.8'/></svg>");
+    animation:bgDrift 40s linear infinite;
+  }
+
+  /* FUEL — fuel drop pattern */
+  #panel-fuel::before {
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><path d='M60,20 C60,20 40,50 40,70 C40,85 50,95 60,95 C70,95 80,85 80,70 C80,50 60,20 60,20 Z' stroke='%23f59e0b' stroke-width='1.2' fill='none'/><circle cx='25' cy='30' r='3' fill='%23f59e0b'/><circle cx='100' cy='90' r='2' fill='%23f59e0b'/></svg>");
+    animation:bgDrift 80s linear infinite;
+  }
+
+  /* CHEMICAL — beaker/flask pattern */
+  #panel-chemical::before {
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><path d='M45,25 L45,55 L30,90 Q30,100 45,100 L75,100 Q90,100 90,90 L75,55 L75,25 Z' stroke='%2310b981' stroke-width='1.2' fill='none'/><line x1='40' y1='25' x2='80' y2='25' stroke='%2310b981' stroke-width='1.5'/><circle cx='50' cy='75' r='2' fill='%2310b981'/><circle cx='65' cy='85' r='1.5' fill='%2310b981'/></svg>");
+    animation:bgDrift 100s linear infinite;
+  }
+
+  /* BOILER — steam/pressure pattern */
+  #panel-boiler::before {
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><rect x='40' y='50' width='60' height='70' rx='4' stroke='%23ef4444' stroke-width='1.2' fill='none'/><path d='M55,50 Q55,30 60,30 Q65,50 70,30 Q75,50 80,30 Q85,50 85,50' stroke='%23ef4444' stroke-width='1' fill='none' opacity='0.6'/><circle cx='70' cy='80' r='8' stroke='%23ef4444' stroke-width='1' fill='none'/><line x1='70' y1='75' x2='73' y2='82' stroke='%23ef4444' stroke-width='1.5'/></svg>");
+    animation:bgDrift 70s linear infinite;
+  }
+
+  /* PURCHASE — invoice/document pattern */
+  #panel-purchase::before {
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><rect x='30' y='20' width='60' height='80' stroke='%233b82f6' stroke-width='1.2' fill='none'/><line x1='40' y1='40' x2='80' y2='40' stroke='%233b82f6' stroke-width='0.8'/><line x1='40' y1='55' x2='80' y2='55' stroke='%233b82f6' stroke-width='0.8'/><line x1='40' y1='70' x2='70' y2='70' stroke='%233b82f6' stroke-width='0.8'/><line x1='40' y1='85' x2='60' y2='85' stroke='%233b82f6' stroke-width='0.8'/></svg>");
+    animation:bgDrift 85s linear infinite;
+  }
+
+  /* ROLLS & DIE — gear pattern */
+  #panel-rolldie::before {
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><g stroke='%2306b6d4' stroke-width='1.2' fill='none'><circle cx='70' cy='70' r='25'/><circle cx='70' cy='70' r='10'/><line x1='70' y1='35' x2='70' y2='45'/><line x1='70' y1='95' x2='70' y2='105'/><line x1='35' y1='70' x2='45' y2='70'/><line x1='95' y1='70' x2='105' y2='70'/><line x1='45' y1='45' x2='52' y2='52'/><line x1='88' y1='88' x2='95' y2='95'/><line x1='45' y1='95' x2='52' y2='88'/><line x1='88' y1='52' x2='95' y2='45'/></g></svg>");
+    animation:bgDrift 55s linear infinite;
+  }
+
+
+
+  .equip-card.on-current { border-left:4px solid var(--success); }
+  .equip-card.off-current { border-left:4px solid var(--danger); }
+  .status-badge { font-family:Rajdhani,sans-serif; font-size:.62rem; font-weight:700; letter-spacing:.08em; padding:2px 7px; border-radius:5px; flex-shrink:0; }
+  .status-badge.sb-on { background:rgba(16,185,129,.18); color:var(--success); border:1px solid var(--success); }
+  .status-badge.sb-off { background:rgba(239,68,68,.18); color:var(--danger); border:1px solid var(--danger); }
+  .status-badge.sb-unknown { background:var(--surface3); color:var(--muted); border:1px solid var(--border); }
+  .equip-meta { font-size:.68rem; color:var(--muted); margin-top:.4rem; font-family:DM Sans,sans-serif; line-height:1.4; }
+  .equip-meta-val { color:var(--accent2); font-weight:500; }
+  .equip-meta-reason { color:var(--warn); font-style:italic; }
+
+  .equip-card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:.7rem .85rem; transition:border-color .2s; }
+  .equip-card.on { border-color:var(--success); background:rgba(16,185,129,.06); }
+  .equip-card.off { border-color:var(--danger); background:rgba(239,68,68,.06); }
+  .equip-card-top { display:flex; align-items:center; justify-content:space-between; gap:.6rem; }
+  .equip-name { font-family:Rajdhani,sans-serif; font-size:.88rem; font-weight:700; letter-spacing:.03em; color:var(--text); }
+  .equip-toggle { display:flex; gap:.35rem; flex-shrink:0; }
+  .equip-btn { padding:.42rem .85rem; border:1px solid var(--border); border-radius:7px; background:var(--surface3); color:var(--muted); font-family:Rajdhani,sans-serif; font-size:.75rem; font-weight:700; letter-spacing:.06em; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:all .15s; }
+  .equip-btn.on-active { background:rgba(16,185,129,.15); border-color:var(--success); color:var(--success); }
+  .equip-btn.off-active { background:rgba(239,68,68,.13); border-color:var(--danger); color:var(--danger); }
+  .equip-reason-wrap { margin-top:.55rem; display:none; }
+  .equip-card.off .equip-reason-wrap { display:block; }
+  .equip-reason-wrap input { width:100%; height:38px; background:var(--surface3); border:1px solid var(--border); border-radius:7px; padding:0 .7rem; color:var(--text); font-family:DM Sans,sans-serif; font-size:.82rem; outline:none; }
+  .equip-reason-wrap input:focus { border-color:var(--danger); }
+
+  /* Production tab background — production/factory theme */
+  #panel-prodstat::before {
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><g stroke='%2310b981' stroke-width='2' fill='none'><rect x='30' y='60' width='30' height='40'/><rect x='75' y='45' width='35' height='55'/><line x1='60' y1='75' x2='75' y2='75'/><circle cx='45' cy='50' r='6'/><circle cx='92' cy='35' r='4'/><line x1='45' y1='56' x2='45' y2='60'/><line x1='92' y1='39' x2='92' y2='45'/></g></svg>");
+    animation:bgDrift 75s linear infinite;
+  }
+
+  @keyframes bgDrift {
+    from { background-position: 0 0; }
+    to   { background-position: 300px 300px; }
+  }
+
+
   @keyframes spin { to { transform:rotate(360deg); } }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
 </style>
@@ -237,6 +334,8 @@
   <button class="tab-btn" onclick="switchTab('chemical')" id="tab-chemical"><svg viewBox="0 0 24 24"><path d="M9 3h6v10l4 8H5l4-8V3z"/><line x1="9" y1="7" x2="15" y2="7"/></svg>Chem &amp; Softener</button>
   <button class="tab-btn" onclick="switchTab('boiler')" id="tab-boiler"><svg viewBox="0 0 24 24"><path d="M4 4h16v6a8 8 0 0 1-16 0V4z"/><line x1="12" y1="14" x2="12" y2="20"/><line x1="8" y1="20" x2="16" y2="20"/></svg>Boiler</button>
   <button class="tab-btn" onclick="switchTab('purchase')" id="tab-purchase"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Purchase</button>
+  <button class="tab-btn" onclick="switchTab('rolldie')" id="tab-rolldie"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>Rolls &amp; Die</button>
+  <button class="tab-btn" onclick="switchTab('prodstat')" id="tab-prodstat"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Production</button>
 </div></div>
 
 <!-- TAB 1: LINE -->
@@ -453,6 +552,121 @@
   <button type="submit" class="submit-btn" id="prSubmitBtn"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SUBMIT PURCHASE REQUEST</button>
 </form></div></div>
 
+
+<!-- TAB: ROLLS & DIE MONITORING (Pellet Mill Operator) -->
+<div class="tab-panel" id="panel-rolldie"><div class="container"><form id="rolldieForm">
+  <div class="card"><div class="card-title">Identification</div>
+    <div class="field"><label>Plant <span class="required">*</span></label>
+      <select id="rd-plant" required onchange="onRdPlantChange()">
+        <option value="" disabled selected>Select plant...</option>
+        <option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option>
+      </select>
+    </div>
+    <div class="field"><label>Operator</label>
+      <div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="rd-tech-val">—</span><span class="id-locked-sub">signed in</span></div>
+      <input type="hidden" id="rd-tech" />
+    </div>
+    <div class="row-2">
+      <div class="field"><label>Shift</label>
+        <div class="id-locked" id="rd-shift-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="rd-shift-val">—</span><span class="id-locked-sub">auto</span></div>
+        <input type="hidden" id="rd-shift" />
+      </div>
+      <div class="field"><label>Date &amp; Time</label>
+        <div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card"><div class="card-title">Pelleting Report</div>
+    <div class="field"><label>Feed Type <span class="required">*</span></label>
+      <select id="rd_feedtype_sel" name="rd_feedtype" required><option value="" disabled selected>Select plant first...</option></select>
+    </div>
+    <div class="field"><label>Running Amps <span class="required">*</span></label>
+      <input type="text" name="rd_amps" placeholder="e.g. 130-140 or 155" required />
+    </div>
+    <div class="row-2">
+      <div class="field"><label>Conditioner Feedrate</label>
+        <input type="text" name="rd_feedrate" placeholder="e.g. 12.0 or 16 Hertz" />
+      </div>
+      <div class="field" id="rd-cond1-wrap"><label>Conditioner Temp (°C)</label>
+        <input type="number" name="rd_cond1_temp" placeholder="0.0" step="0.1" inputmode="decimal" />
+      </div>
+    </div>
+    <div class="field" id="rd-cond2-wrap" style="display:none;"><label>Conditioner 2 Temp (°C)</label>
+      <input type="number" name="rd_cond2_temp" placeholder="0.0" step="0.1" inputmode="decimal" />
+    </div>
+    <div class="row-2">
+      <div class="field"><label>Die Size <span class="required">*</span></label>
+        <select id="rd_die_size_sel" name="rd_die_size" required onchange="onDieSizeChange()"><option value="" disabled selected>Select size...</option></select>
+      </div>
+      <div class="field" id="rd-diecode-wrap"><label>Die Code</label>
+        <input type="text" id="rd_die_code" name="rd_die_code" placeholder="Auto-filled" readonly style="cursor:not-allowed;color:var(--muted);" />
+      </div>
+    </div>
+    <div class="field"><label>Remarks</label>
+      <textarea name="rd_remarks" placeholder="e.g. Normal Operation, roll wear, breakdowns..."></textarea>
+    </div>
+  </div>
+
+  <div class="card"><div class="card-title">Photo Documentation</div>
+    <div class="photo-grid g2">
+      <div class="photo-slot"><label>Photo 1</label>
+        <input type="file" id="pf_rd1" accept="image/*" capture="environment"/>
+        <div class="photo-prev" id="pf_rd1_p"><img/></div></div>
+      <div class="photo-slot"><label>Photo 2</label>
+        <input type="file" id="pf_rd2" accept="image/*" capture="environment"/>
+        <div class="photo-prev" id="pf_rd2_p"><img/></div></div>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn" id="rdSubmitBtn">
+    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    SUBMIT ROLLS &amp; DIE REPORT
+  </button>
+</form></div></div>
+
+
+<!-- TAB: PRODUCTION STATUS -->
+<div class="tab-panel" id="panel-prodstat"><div class="container"><form id="prodstatForm">
+  <div class="card"><div class="card-title">Identification</div>
+    <div class="field"><label>Plant <span class="required">*</span></label>
+      <select id="ps-plant" required onchange="loadProdEquip(this.value)">
+        <option value="" disabled selected>Select plant...</option>
+        <option value="HOREB">HOREB</option><option value="ARGAO">ARGAO</option>
+      </select>
+    </div>
+    <div class="field"><label>Operator</label>
+      <div class="id-locked"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="id-locked-val" id="ps-tech-val">—</span><span class="id-locked-sub">signed in</span></div>
+      <input type="hidden" id="ps-tech" />
+    </div>
+    <div class="row-2">
+      <div class="field"><label>Shift</label>
+        <div class="id-locked" id="ps-shift-locked"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="id-locked-val" id="ps-shift-val">—</span><span class="id-locked-sub">assigned</span></div>
+        <select id="ps-shift-super" style="display:none;border-color:rgba(245,158,11,.4);color:var(--warn);" onchange="sSh('ps',this.value)"><option value="Day">Day Shift</option><option value="Night">Night Shift</option></select>
+        <input type="hidden" id="ps-shift" />
+      </div>
+      <div class="field"><label>Date &amp; Time</label>
+        <div class="timestamp-pill"><div class="ts-dot"></div><span class="ts-display">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card"><div class="card-title">Equipment Status</div>
+    <div style="font-size:.72rem;color:var(--muted);margin-bottom:.75rem;line-height:1.4;">Toggle each equipment ON/OFF. Add a reason if turning OFF. Timestamp is captured on submit.</div>
+    <div id="ps-equip-list" style="display:flex;flex-direction:column;gap:.6rem;">
+      <div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.85rem;">Select a plant to load equipment...</div>
+    </div>
+    <div class="field" style="margin-top:.85rem;"><label>General Remarks</label>
+      <textarea name="ps_remarks" placeholder="Overall context, e.g. Mash silo refilled, resumed pelleting..."></textarea>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn" id="psSubmitBtn">
+    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    SUBMIT PRODUCTION STATUS
+  </button>
+</form></div></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -474,13 +688,13 @@
   }
 
 
-  // PMS-v3 — stable login version with all tabs
+  // PMS-v6-TRIAL — adds Rolls & Die tab + PMO role + time-based shift auto-detect
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJYpavidaoJTx4WgbZppdpX-TCZz9c7WThQYzHGyW_KeTxxyOlkVTcjdTzaPEBrte-/exec';
   const SPIN_SVG = '<svg viewBox="0 0 24 24" style="animation:spin 1s linear infinite;width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>';
   const SEND_SVG = '<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
 
-  var PANELS=['electrical','econsum','vibration','fuel','chemical','boiler','purchase'];
-  function switchTab(id){PANELS.forEach(function(p){document.getElementById('panel-'+p).classList.toggle('active',p===id);document.getElementById('tab-'+p).classList.toggle('active',p===id);});window.scrollTo({top:0,behavior:'smooth'});}
+  var PANELS=['electrical','econsum','vibration','fuel','chemical','boiler','purchase','rolldie','prodstat'];
+  function switchTab(id){PANELS.forEach(function(p){document.getElementById('panel-'+p).classList.toggle('active',p===id);document.getElementById('tab-'+p).classList.toggle('active',p===id);});window.scrollTo({top:0,behavior:'smooth'});if(id==='prodstat'){var pp=document.getElementById('ps-plant');if(pp&&pp.value)loadProdEquip(pp.value);}}
 
   var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],DA=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   function pad(n){return String(n).padStart(2,'0');}
@@ -510,7 +724,7 @@
   }
 
   function attachPhotoListeners(){
-    var ids=['pf_vib','pf_fd','pf_fm','pf_c1','pf_c2','pf_c3','pf_c4','pf_c5','pf_b1','pf_b2','pf_b3','pf_b4','pf_b5'];
+    var ids=['pf_vib','pf_fd','pf_fm','pf_c1','pf_c2','pf_c3','pf_c4','pf_c5','pf_b1','pf_b2','pf_b3','pf_b4','pf_b5','pf_ec1','pf_ec2','pf_rd1','pf_rd2'];
     ids.forEach(function(id){
       var el=document.getElementById(id);
       if(el) el.addEventListener('change',function(){prevPhoto(this,id+'_p');});
@@ -682,6 +896,343 @@
   }
 
 
+
+  /* ══════════════════════════════════════
+     ROLLS & DIE MONITORING (PMO)
+  ══════════════════════════════════════ */
+
+  function detectShiftByTime(){
+    var h = new Date().getHours();
+    // 7am (07:00) to 7pm (19:00) = 1st Shift, else 2nd Shift
+    return (h >= 7 && h < 19) ? '1st Shift' : '2nd Shift';
+  }
+
+
+  var DIE_MAP = {};
+
+  function loadRollsDieConfig(plant){
+    if(!plant) return;
+    var ftSel = document.getElementById('rd_feedtype_sel');
+    var dsSel = document.getElementById('rd_die_size_sel');
+    var dcInp = document.getElementById('rd_die_code');
+    if(ftSel) ftSel.innerHTML = '<option value="" disabled selected>Loading...</option>';
+    if(dsSel) dsSel.innerHTML = '<option value="" disabled selected>Loading...</option>';
+    if(dcInp) dcInp.value = '';
+
+    var cb='rdc_'+Date.now(), s=document.createElement('script');
+    var timer=setTimeout(function(){clearTimeout(timer);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);},6000);
+    s.onerror=function(){clearTimeout(timer);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};
+    window[cb]=function(res){
+      clearTimeout(timer); delete window[cb];
+      if(s.parentNode) s.parentNode.removeChild(s);
+      if(res && res.result==='success'){
+        // Populate feed types
+        if(ftSel){
+          ftSel.innerHTML = '<option value="" disabled selected>Select feed type...</option>';
+          (res.feedtypes||[]).forEach(function(ft){
+            var o=document.createElement('option'); o.value=ft; o.textContent=ft;
+            ftSel.appendChild(o);
+          });
+        }
+        // Populate die sizes and store mapping
+        DIE_MAP = res.dieMap || {};
+        if(dsSel){
+          dsSel.innerHTML = '<option value="" disabled selected>Select size...</option>';
+          Object.keys(DIE_MAP).sort().forEach(function(sz){
+            var o=document.createElement('option'); o.value=sz; o.textContent=sz;
+            dsSel.appendChild(o);
+          });
+        }
+      } else {
+        if(ftSel) ftSel.innerHTML = '<option value="" disabled selected>No feed types configured</option>';
+        if(dsSel) dsSel.innerHTML = '<option value="" disabled selected>No die sizes configured</option>';
+      }
+    };
+    s.src = SCRIPT_URL + '?action=getRollsDieConfig&plant='+encodeURIComponent(plant)+'&callback='+cb;
+    document.head.appendChild(s);
+  }
+
+  function onDieSizeChange(){
+    var sz = document.getElementById('rd_die_size_sel').value;
+    var codeInp = document.getElementById('rd_die_code');
+    if(codeInp) codeInp.value = DIE_MAP[sz] || '';
+  }
+
+
+  function onRdPlantChange(){
+    var plant = document.getElementById('rd-plant').value;
+    var cond2 = document.getElementById('rd-cond2-wrap');
+    if(plant === 'ARGAO'){
+      cond2.style.display = 'block';
+    } else {
+      cond2.style.display = 'none';
+      var c2 = cond2.querySelector('input'); if(c2) c2.value = '';
+    }
+    if(plant) loadRollsDieConfig(plant);
+  }
+
+  document.getElementById('rolldieForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = document.getElementById('rdSubmitBtn');
+    btn.disabled = true; btn.innerHTML = SPIN_SVG+' Submitting...';
+    var now = new Date(), form = document.getElementById('rolldieForm');
+    function g(n){var el=form.querySelector('[name="'+n+'"]');return el?el.value:'';}
+    var params = {
+      type: 'rolls_die',
+      timestamp: now.toISOString(),
+      date: now.toLocaleDateString('en-PH'),
+      time: now.toLocaleTimeString('en-PH'),
+      plant: document.getElementById('rd-plant').value,
+      operator: document.getElementById('rd-tech').value,
+      shift: document.getElementById('rd-shift').value || detectShiftByTime(),
+      feedtype: g('rd_feedtype'),
+      amps: g('rd_amps'),
+      feedrate: g('rd_feedrate'),
+      cond1_temp: g('rd_cond1_temp'),
+      cond2_temp: g('rd_cond2_temp'),
+      die_size: g('rd_die_size'),
+      die_code: g('rd_die_code'),
+      remarks: g('rd_remarks')
+    };
+    submitViaJSONP(params,
+      function(){
+        showToast('Rolls & Die report submitted!');
+        form.reset();
+        document.getElementById('rd-cond2-wrap').style.display = 'none';
+        // Restore auto-detected shift
+        var s = detectShiftByTime();
+        document.getElementById('rd-shift').value = s;
+        document.getElementById('rd-shift-val').textContent = s;
+        window.scrollTo({top:0,behavior:'smooth'});
+        btn.disabled = false; btn.innerHTML = SEND_SVG+' SUBMIT ROLLS & DIE REPORT';
+      },
+      function(){
+        showToast('Failed.', true);
+        btn.disabled = false; btn.innerHTML = SEND_SVG+' SUBMIT ROLLS & DIE REPORT';
+      }
+    );
+  });
+
+  /* ══════════════════════════════════════
+     PMO ROLE — HIDE ALL OTHER TABS
+  ══════════════════════════════════════ */
+  function applyPmoView(user){
+    // Hide every tab button except Rolls & Die
+    var allTabs = ['electrical','econsum','vibration','fuel','chemical','boiler','purchase'];
+    allTabs.forEach(function(t){
+      var btn = document.getElementById('tab-'+t);
+      var panel = document.getElementById('panel-'+t);
+      if(btn) btn.style.display = 'none';
+      if(panel){ panel.classList.remove('active'); panel.style.display = 'none'; }
+    });
+    // Show Rolls & Die and Production
+    var rdBtn = document.getElementById('tab-rolldie');
+    var rdPanel = document.getElementById('panel-rolldie');
+    if(rdBtn){ rdBtn.style.display = ''; rdBtn.classList.add('active'); }
+    if(rdPanel){ rdPanel.classList.add('active'); }
+    // Also make Production tab visible for PMO
+    var psBtn = document.getElementById('tab-prodstat');
+    var psPanel = document.getElementById('panel-prodstat');
+    if(psBtn){ psBtn.style.display = ''; }
+    if(psPanel){ psPanel.style.removeProperty('display'); }
+
+    // Auto-fill PMO identification
+    document.getElementById('rd-tech').value = user.name || '';
+    document.getElementById('rd-tech-val').textContent = user.name || '—';
+    var shift = detectShiftByTime();
+    document.getElementById('rd-shift').value = shift;
+    document.getElementById('rd-shift-val').textContent = shift;
+    // Set plant from user record (if assigned)
+    if(user.plant){
+      var pe = document.getElementById('rd-plant');
+      for(var i=0;i<pe.options.length;i++){
+        if(pe.options[i].value===user.plant){ pe.selectedIndex=i; break; }
+      }
+      onRdPlantChange();
+      loadRollsDieConfig(user.plant);
+      // Also auto-fill and load Production tab for PMO
+      document.getElementById('ps-tech').value = user.name || '';
+      document.getElementById('ps-tech-val').textContent = user.name || '—';
+      var pShift = detectShiftByTime();
+      document.getElementById('ps-shift').value = pShift;
+      document.getElementById('ps-shift-val').textContent = pShift;
+      var psPlant = document.getElementById('ps-plant');
+      if(psPlant){
+        for(var k=0;k<psPlant.options.length;k++){
+          if(psPlant.options[k].value===user.plant){ psPlant.selectedIndex=k; break; }
+        }
+        loadProdEquip(user.plant);
+      }
+    }
+  }
+
+  function restoreTechView(){
+    var allTabs = ['electrical','econsum','vibration','fuel','chemical','boiler','purchase','rolldie','prodstat'];
+    allTabs.forEach(function(t){
+      var btn = document.getElementById('tab-'+t);
+      var panel = document.getElementById('panel-'+t);
+      if(btn) btn.style.display = '';
+      if(panel) panel.style.display = '';
+    });
+  }
+
+  // Refresh shift display every minute in case shift changes while form is open
+  setInterval(function(){
+    if(currentUser && currentUser.role === 'PMO'){
+      var s = detectShiftByTime();
+      ['rd','ps'].forEach(function(prefix){
+        var el = document.getElementById(prefix+'-shift');
+        var v = document.getElementById(prefix+'-shift-val');
+        if(el) el.value = s;
+        if(v) v.textContent = s;
+      });
+    }
+  }, 60000);
+
+
+
+  /* ══════════════════════════════════════
+     PRODUCTION STATUS
+  ══════════════════════════════════════ */
+  var CURRENT_EQUIP = [];
+
+  function loadProdEquip(plant){
+    if(!plant) return;
+    var list = document.getElementById('ps-equip-list');
+    list.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.8rem;">Loading equipment status...</div>';
+    var cb='pse_'+Date.now(), s=document.createElement('script');
+    var timer=setTimeout(function(){
+      clearTimeout(timer); delete window[cb];
+      if(s.parentNode) s.parentNode.removeChild(s);
+      list.innerHTML='<div style="text-align:center;padding:1rem;color:var(--danger);font-size:.8rem;">Failed to load. Try again.</div>';
+    }, 8000);
+    s.onerror=function(){clearTimeout(timer);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};
+    window[cb]=function(res){
+      clearTimeout(timer); delete window[cb];
+      if(s.parentNode) s.parentNode.removeChild(s);
+      if(res && res.result==='success' && res.equipment){
+        CURRENT_EQUIP = res.equipment.map(function(e){return e.name;});
+        renderEquipCards(res.equipment);
+      } else {
+        list.innerHTML='<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.8rem;">No equipment configured for '+plant+'.</div>';
+      }
+    };
+    s.src=SCRIPT_URL+'?action=getCurrentEquipStatus&plant='+encodeURIComponent(plant)+'&callback='+cb;
+    document.head.appendChild(s);
+  }
+
+  function renderEquipCards(equipment){
+    var list = document.getElementById('ps-equip-list');
+    list.innerHTML = '';
+    equipment.forEach(function(eq, idx){
+      var card = document.createElement('div');
+      var currentStatus = eq.status || '';
+      card.className = 'equip-card' + (currentStatus==='ON'?' on-current':currentStatus==='OFF'?' off-current':'');
+      card.dataset.equipment = eq.name;
+      card.dataset.status = ''; // pending change status (empty until user toggles)
+      card.dataset.currentStatus = currentStatus;
+
+      var statusBadge = currentStatus
+        ? '<span class="status-badge '+(currentStatus==='ON'?'sb-on':'sb-off')+'">'+currentStatus+'</span>'
+        : '<span class="status-badge sb-unknown">NO DATA</span>';
+
+      var meta = eq.last_change
+        ? '<div class="equip-meta">Last: <span class="equip-meta-val">'+eq.last_change+'</span> by <span class="equip-meta-val">'+(eq.last_by||'—')+'</span>'
+          + (eq.reason ? ' — <span class="equip-meta-reason">'+eq.reason+'</span>' : '')
+          + '</div>'
+        : '<div class="equip-meta" style="color:var(--muted);">No prior status recorded</div>';
+
+      card.innerHTML =
+        '<div class="equip-card-top">'+
+          '<div style="display:flex;align-items:center;gap:.5rem;flex:1;min-width:0;">'+
+            '<div class="equip-name">'+eq.name+'</div>'+
+            statusBadge+
+          '</div>'+
+          '<div class="equip-toggle">'+
+            '<button type="button" class="equip-btn" data-set="ON" onclick="setEquipStatus(this)">ON</button>'+
+            '<button type="button" class="equip-btn" data-set="OFF" onclick="setEquipStatus(this)">OFF</button>'+
+          '</div>'+
+        '</div>'+
+        meta+
+        '<div class="equip-reason-wrap">'+
+          '<input type="text" placeholder="Reason (e.g. mash silo empty)" data-reason="'+idx+'"/>'+
+        '</div>';
+      list.appendChild(card);
+    });
+  }
+
+  function setEquipStatus(btn){
+    var card = btn.closest('.equip-card');
+    var status = btn.dataset.set;
+    card.querySelectorAll('.equip-btn').forEach(function(b){
+      b.classList.remove('on-active','off-active');
+    });
+    if(status === 'ON'){
+      btn.classList.add('on-active');
+      card.classList.remove('off'); card.classList.add('on');
+    } else {
+      btn.classList.add('off-active');
+      card.classList.remove('on'); card.classList.add('off');
+    }
+    card.dataset.status = status;
+  }
+
+  document.getElementById('prodstatForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = document.getElementById('psSubmitBtn');
+    var events = [];
+    document.querySelectorAll('#ps-equip-list .equip-card').forEach(function(card){
+      var status = card.dataset.status;
+      if(!status) return; // skip untouched equipment
+      var reasonInput = card.querySelector('input[data-reason]');
+      events.push({
+        equipment: card.dataset.equipment,
+        status: status,
+        reason: reasonInput ? reasonInput.value : ''
+      });
+    });
+    if(events.length === 0){
+      showToast('Toggle at least one equipment.', true);
+      return;
+    }
+    btn.disabled = true; btn.innerHTML = SPIN_SVG+' Submitting...';
+    var now = new Date(), form = document.getElementById('prodstatForm');
+    var params = {
+      type: 'prod_status',
+      timestamp: now.toISOString(),
+      date: now.toLocaleDateString('en-PH'),
+      time: now.toLocaleTimeString('en-PH'),
+      plant: document.getElementById('ps-plant').value,
+      operator: document.getElementById('ps-tech').value,
+      shift: document.getElementById('ps-shift').value,
+      events: JSON.stringify(events),
+      remarks: form.querySelector('[name="ps_remarks"]').value
+    };
+    submitViaJSONP(params,
+      function(){
+        showToast('Production status logged ('+events.length+' event'+(events.length>1?'s':'')+')!');
+        // Reset the toggle states but keep equipment cards
+        document.querySelectorAll('#ps-equip-list .equip-card').forEach(function(card){
+          card.classList.remove('on','off');
+          card.dataset.status = '';
+          card.querySelectorAll('.equip-btn').forEach(function(b){
+            b.classList.remove('on-active','off-active');
+          });
+          var ri = card.querySelector('input[data-reason]');
+          if(ri) ri.value = '';
+        });
+        form.querySelector('[name="ps_remarks"]').value = '';
+        window.scrollTo({top:0,behavior:'smooth'});
+        btn.disabled = false; btn.innerHTML = SEND_SVG+' SUBMIT PRODUCTION STATUS';
+      },
+      function(){
+        showToast('Failed.', true);
+        btn.disabled = false; btn.innerHTML = SEND_SVG+' SUBMIT PRODUCTION STATUS';
+      }
+    );
+  });
+
+
   // LOGIN
   var currentUser=null;
   document.getElementById('loginUser').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
@@ -709,7 +1260,8 @@
 
   function loginSuccess(user){
     currentUser=user;
-    ['elec','ec','vib','fuel','chem','boiler','pr'].forEach(function(prefix){
+    var isPmo = user.role === 'PMO';
+    ['elec','ec','vib','fuel','chem','boiler','pr','rd','ps'].forEach(function(prefix){
       var techEl=document.getElementById(prefix+'-tech'),techVal=document.getElementById(prefix+'-tech-val');
       var shiftEl=document.getElementById(prefix+'-shift'),shiftVal=document.getElementById(prefix+'-shift-val');
       if(techEl)techEl.value=user.name||'';if(techVal)techVal.textContent=user.name||'—';
@@ -718,7 +1270,7 @@
       if(plantEl&&user.plant){for(var i=0;i<plantEl.options.length;i++){if(plantEl.options[i].value===user.plant){plantEl.selectedIndex=i;break;}}}
     });
     var isSuper=user.role==='SUPER';
-    ['elec','ec','vib','fuel','chem','boiler','pr'].forEach(function(p){
+    ['elec','ec','vib','fuel','chem','boiler','pr','rd','ps'].forEach(function(p){
       var plantEl=document.getElementById(p+'-plant');
       var shiftLocked=document.getElementById(p+'-shift-locked');
       var shiftSuper=document.getElementById(p+'-shift-super');
@@ -740,6 +1292,30 @@
       }
     });
     document.getElementById('badgeName').innerHTML=user.name+(isSuper?'<span class="super-badge">★ SUPER</span>':'');
+    if(isPmo){ applyPmoView(user); }
+    else {
+      restoreTechView();
+      // For non-PMO users, also load rolls die config if plant is set
+      if(user.plant){
+        setTimeout(function(){
+          var rdPlant = document.getElementById('rd-plant');
+          if(rdPlant){
+            for(var i=0;i<rdPlant.options.length;i++){
+              if(rdPlant.options[i].value===user.plant){ rdPlant.selectedIndex=i; break; }
+            }
+            onRdPlantChange();
+          }
+          // Also load production equipment
+          var psPlant = document.getElementById('ps-plant');
+          if(psPlant){
+            for(var j=0;j<psPlant.options.length;j++){
+              if(psPlant.options[j].value===user.plant){ psPlant.selectedIndex=j; break; }
+            }
+            loadProdEquip(user.plant);
+          }
+        }, 600);
+      }
+    }
     loadDeviceConfig();
     if(user.plant){
       setTimeout(function(){
@@ -766,13 +1342,14 @@
 
   function doLogout(){
     currentUser=null;
-    ['elec','ec','vib','fuel','chem','boiler','pr'].forEach(function(p){
+    restoreTechView();
+    ['elec','ec','vib','fuel','chem','boiler','pr','rd','ps'].forEach(function(p){
       var pEl=document.getElementById(p+'-plant');
       if(pEl){pEl.disabled=false;pEl.style.borderColor='';pEl.selectedIndex=0;}
       var sl=document.getElementById(p+'-shift-locked');if(sl)sl.style.display='flex';
       var ss=document.getElementById(p+'-shift-super');if(ss)ss.style.display='none';
     });
-    ['elec','ec','vib','fuel','chem','boiler','pr'].forEach(function(prefix){
+    ['elec','ec','vib','fuel','chem','boiler','pr','rd','ps'].forEach(function(prefix){
       ['tech','shift'].forEach(function(f){var el=document.getElementById(prefix+'-'+f);if(el)el.value='';var v=document.getElementById(prefix+'-'+f+'-val');if(v)v.textContent='—';});
     });
     document.getElementById('userBadge').style.display='none';
